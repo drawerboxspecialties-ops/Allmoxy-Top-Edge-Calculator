@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DBS Drawers - Top Edge Calculator</title>
+    <title>Allmoxy Top Edge Report</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -152,6 +152,13 @@
             transform: translateY(0);
         }
 
+        .btn:focus-visible,
+        .delete-btn:focus-visible,
+        input:focus-visible {
+            outline: 3px solid rgba(79, 172, 254, 0.35);
+            outline-offset: 2px;
+        }
+
         .btn-danger {
             background-color: var(--danger-color);
             color: #fff;
@@ -181,7 +188,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             background-color: #ffffff;
-            overflow: hidden;
+            overflow-x: auto;
             margin-bottom: 1.5rem;
         }
 
@@ -242,6 +249,64 @@
             border-top: 2px solid var(--border-color);
         }
 
+        .cut-optimization {
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            background: #f8fafc;
+            color: #0f172a;
+            padding: 0.75rem;
+            margin: 0.6rem 0 1rem 0;
+            font-size: 0.88rem;
+        }
+
+        .cut-optimization-title {
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .cut-optimization-meta {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .cut-pattern {
+            display: grid;
+            grid-template-columns: 120px 1fr 90px;
+            gap: 0.6rem;
+            align-items: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 0.45rem;
+            margin-top: 0.45rem;
+        }
+
+        .cut-pattern-count {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .cut-rip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .cut-rip-chip {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 999px;
+            color: #0f172a;
+            font-weight: 700;
+            padding: 0.18rem 0.5rem;
+            white-space: nowrap;
+        }
+
+        .cut-waste {
+            color: #475569;
+            font-weight: 700;
+            text-align: right;
+        }
+
         .grand-total-box {
             background-color: #f0f9ff;
             border: 2px solid #bae6fd;
@@ -266,6 +331,160 @@
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             border-left-width: 4px;
+        }
+
+        .status-box {
+            display: none;
+            border-left-color: var(--success-color);
+        }
+
+        .status-box.error {
+            border-left-color: var(--danger-color);
+            color: #991b1b;
+        }
+
+        .order-manager {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 0.85rem;
+            display: none;
+            gap: 0.75rem;
+            flex-direction: column;
+        }
+
+        .order-manager h3 {
+            font-size: 0.95rem;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .order-select {
+            min-height: 7rem;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .order-select option {
+            padding: 0.35rem;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .order-help {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        .order-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .order-dropdown summary {
+            list-style: none;
+            cursor: pointer;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            color: #0f172a;
+            font-weight: 600;
+            padding: 0.7rem 0.85rem;
+        }
+
+        .order-dropdown summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .order-dropdown summary::after {
+            content: "Select";
+            float: right;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .order-options {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            margin-top: 0.35rem;
+            max-height: 14rem;
+            overflow-y: auto;
+            padding: 0.35rem;
+        }
+
+        .order-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 8px;
+            color: #0f172a;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.45rem 0.5rem;
+        }
+
+        .order-option:hover {
+            background: #f1f5f9;
+        }
+
+        .order-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.25rem 0.35rem 0.25rem 0.55rem;
+        }
+
+        .order-chip.removed {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            color: #9a3412;
+        }
+
+        .chip-action {
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.8rem;
+            line-height: 1;
+            padding: 0.25rem 0.4rem;
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .chip-action.remove {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .chip-action.restore {
+            background: #dcfce7;
+            color: #166534;
         }
 
         .badge {
@@ -341,14 +560,22 @@
 
         /* Print Media Styles */
         @media print {
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box !important;
+            }
+
             @page {
                 size: letter;
-                margin: 0.6in 0.8in;
+                margin: 0;
             }
             body {
                 background-color: #ffffff;
                 color: #000000;
-                padding: 0;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0.35in 0.55in 0.28in 0.55in !important;
                 font-size: 13px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -378,11 +605,15 @@
             .category-print-group {
                 page-break-inside: avoid;
                 width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
             .category-print-group:not(:first-of-type) {
                 page-break-before: always !important;
                 break-before: page !important;
+                padding-top: 0.18in !important;
             }
 
             header, 
@@ -404,14 +635,18 @@
                 max-height: none !important;
                 overflow: visible !important;
                 border: none !important;
-                margin-bottom: 0.8rem !important;
+                margin: 0 0 0.8rem 0 !important;
+                padding: 0 !important;
                 page-break-inside: auto;
                 width: 100% !important;
+                max-width: 100% !important;
             }
             
             table {
                 width: 100% !important;
+                max-width: 100% !important;
                 border-collapse: collapse !important;
+                table-layout: fixed !important;
                 page-break-inside: auto;
             }
 
@@ -430,25 +665,28 @@
                 padding: 3px 6px !important;
                 font-size: 14px !important;
                 font-weight: bold !important;
-                margin-top: 0.5rem !important;
+                margin: 0.5rem 0 0 0 !important;
                 page-break-after: avoid;
                 page-break-inside: avoid;
+                width: 100% !important;
             }
             
             th {
                 background-color: #f3f4f6 !important;
                 color: #000000 !important;
                 border-bottom: 1.5px solid #000000 !important;
-                padding: 3px 5px !important;
-                font-size: 12px !important;
+                padding: 3px 4px !important;
+                font-size: 11px !important;
                 line-height: 1.2 !important;
+                white-space: normal !important;
             }
             
             td {
                 border-bottom: 1px solid #cbd5e1 !important;
-                padding: 3px 5px !important;
-                font-size: 12px !important;
+                padding: 3px 4px !important;
+                font-size: 11px !important;
                 line-height: 1.2 !important;
+                white-space: normal !important;
             }
 
             .badge {
@@ -479,27 +717,89 @@
                 page-break-inside: avoid;
             }
 
+            .cut-optimization {
+                border: 1px solid #000000 !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 5px !important;
+                margin: 5px 0 8px 0 !important;
+                font-size: 11px !important;
+                line-height: 1.25 !important;
+                page-break-inside: avoid;
+            }
+
+            .cut-optimization-title {
+                font-size: 12px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .cut-optimization-meta {
+                color: #000000 !important;
+                font-size: 10px !important;
+                margin-bottom: 3px !important;
+            }
+
+            .cut-pattern {
+                display: grid !important;
+                grid-template-columns: 86px 1fr 64px !important;
+                gap: 4px !important;
+                border-top: 1px solid #cbd5e1 !important;
+                padding-top: 3px !important;
+                margin-top: 3px !important;
+            }
+
+            .cut-pattern-count,
+            .cut-waste {
+                color: #000000 !important;
+                font-size: 10px !important;
+            }
+
+            .cut-rip-list {
+                gap: 2px !important;
+            }
+
+            .cut-rip-chip {
+                border: 1px solid #000000 !important;
+                background: transparent !important;
+                color: #000000 !important;
+                padding: 1px 3px !important;
+                font-size: 10px !important;
+            }
+
             .print-header {
                 display: flex !important;
                 justify-content: space-between;
-                align-items: center;
+                align-items: flex-start;
                 width: 100% !important;
-                border-bottom: 2px solid #000000 !important;
-                margin-bottom: 12px !important;
-                padding-bottom: 6px !important;
+                border-bottom: 2px solid #0f172a !important;
+                margin: 0 0 8px 0 !important;
+                padding-bottom: 5px !important;
                 font-family: inherit !important;
             }
 
             .print-header .print-title {
-                font-size: 16px !important;
+                font-size: 19px !important;
                 font-weight: bold !important;
-                color: #000000 !important;
+                color: #0f172a !important;
+                letter-spacing: 0.02em !important;
+                text-transform: uppercase !important;
+            }
+
+            .print-header .print-subtitle {
+                display: block !important;
+                font-size: 12px !important;
+                font-weight: normal !important;
+                color: #334155 !important;
+                margin-top: 1px !important;
             }
 
             .print-header .print-timestamp {
-                font-size: 13px !important;
-                font-weight: normal !important;
-                color: #000000 !important;
+                display: block !important;
+                text-align: right !important;
+                font-size: 16px !important;
+                line-height: 1.25 !important;
+                font-weight: bold !important;
+                color: #0f172a !important;
             }
 
             .grid-header-actions h2 {
@@ -528,17 +828,43 @@
             <input type="file" id="file-import" accept=".csv" style="display: none;">
             <button class="btn btn-secondary" onclick="document.getElementById('file-import').click()">📁 Upload Allmoxy CSV</button>
             <button class="btn btn-danger" id="btn-clear-all" style="margin-top: 0.5rem; width: 100%;">🗑️ Clear All Data</button>
+            <div id="import-status" class="note-box status-box" role="status" aria-live="polite"></div>
             
             <div class="form-group" style="margin-top: 1rem;">
                 <label for="order-notes">Involved Orders / Notes</label>
                 <input type="text" id="order-notes" placeholder="e.g. 601697, 601781">
+            </div>
+
+            <div id="order-manager" class="order-manager" aria-live="polite">
+                <div>
+                    <h3>Delete Orders From Report</h3>
+                    <details id="active-orders-dropdown" class="order-dropdown">
+                        <summary>Select active orders</summary>
+                        <div id="active-orders-options" class="order-options"></div>
+                    </details>
+                    <div class="order-actions">
+                        <button type="button" class="btn btn-danger" id="btn-remove-selected-orders">Remove Selected</button>
+                    </div>
+                    <div class="order-help">Select one or more orders, then remove them from the current report.</div>
+                </div>
+                <div id="removed-orders-section" style="display: none;">
+                    <h3>Restore Removed Orders</h3>
+                    <details id="removed-orders-dropdown" class="order-dropdown">
+                        <summary>Select removed orders</summary>
+                        <div id="removed-orders-options" class="order-options"></div>
+                    </details>
+                    <div class="order-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-restore-selected-orders">Restore Selected</button>
+                    </div>
+                    <div class="order-help">Select removed orders here if they need to be added back.</div>
+                </div>
             </div>
         </div>
 
         <!-- Live Computed Report Output Card -->
         <div class="card" id="report-card" style="display: none; flex-grow: 1;">
             <div class="grid-header-actions">
-                <h2>2. Computed Top Edge Report (Live Preview)</h2>
+                <h2>2. Allmoxy Top Edge Report (Live Preview)</h2>
                 <div style="display: flex; gap: 0.5rem;">
                     <button class="btn btn-secondary" id="btn-print">🖨️ Print Report</button>
                     <button class="btn btn-secondary" id="btn-export-csv">📂 Export CSV</button>
@@ -557,59 +883,407 @@
 
     <script>
         let items = [];
+        let computedGroups = [];
+        let activeOrderIds = [];
+        let removedOrderIds = [];
+        let originalDocumentTitle = document.title;
+
+        function formatTimestamp(date = new Date()) {
+            let weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+            let month = String(date.getMonth() + 1).padStart(2, '0');
+            let day = String(date.getDate()).padStart(2, '0');
+            let year = date.getFullYear();
+            let hours = date.getHours();
+            let minutes = String(date.getMinutes()).padStart(2, '0');
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+
+            hours = hours % 12 || 12;
+            let hoursStr = String(hours).padStart(2, '0');
+            return `${weekday}, ${month}/${day}/${year} ${hoursStr}:${minutes} ${ampm}`;
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        function escapeCSV(value) {
+            return `"${String(value ?? '').replace(/"/g, '""')}"`;
+        }
+
+        function setStatus(message, isError = false) {
+            let status = document.getElementById('import-status');
+            status.textContent = message;
+            status.classList.toggle('error', isError);
+            status.style.display = message ? 'block' : 'none';
+        }
+
+        function updatePrintTimestamps() {
+            document.querySelectorAll('.print-timestamp').forEach(el => {
+                el.textContent = formatTimestamp();
+            });
+        }
+
+        function preparePrint() {
+            updatePrintTimestamps();
+            if (document.title.trim()) {
+                originalDocumentTitle = document.title;
+            }
+            document.title = ' ';
+        }
+
+        function finishPrint() {
+            document.title = originalDocumentTitle || 'Allmoxy Top Edge Report';
+        }
+
+        function printReport() {
+            preparePrint();
+            window.print();
+        }
+
+        function syncOrderNotes() {
+            document.getElementById('order-notes').value = activeOrderIds.join(', ');
+        }
+
+        function addActiveOrders(orderIds) {
+            orderIds.forEach(id => {
+                if (!id) return;
+                if (!activeOrderIds.includes(id) && !removedOrderIds.includes(id)) {
+                    activeOrderIds.push(id);
+                }
+            });
+            activeOrderIds.sort();
+        }
+
+        function removeOrder(orderId) {
+            activeOrderIds = activeOrderIds.filter(id => id !== orderId);
+            if (!removedOrderIds.includes(orderId)) {
+                removedOrderIds.push(orderId);
+                removedOrderIds.sort();
+            }
+            syncOrderNotes();
+            renderOrderManager();
+            calculateReport();
+        }
+
+        function getSelectedCheckedValues(containerId) {
+            return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`)).map(input => input.value);
+        }
+
+        function removeSelectedOrders() {
+            let selectedOrders = getSelectedCheckedValues('active-orders-options');
+            if (selectedOrders.length === 0) {
+                setStatus('Select one or more active orders to remove.', true);
+                return;
+            }
+
+            activeOrderIds = activeOrderIds.filter(id => !selectedOrders.includes(id));
+            selectedOrders.forEach(id => {
+                if (!removedOrderIds.includes(id)) {
+                    removedOrderIds.push(id);
+                }
+            });
+            removedOrderIds.sort();
+            syncOrderNotes();
+            renderOrderManager();
+            calculateReport();
+            setStatus(`Removed ${selectedOrders.length} order${selectedOrders.length === 1 ? '' : 's'} from the report.`);
+        }
+
+        function restoreSelectedOrders() {
+            let selectedOrders = getSelectedCheckedValues('removed-orders-options');
+            if (selectedOrders.length === 0) {
+                setStatus('Select one or more removed orders to restore.', true);
+                return;
+            }
+
+            removedOrderIds = removedOrderIds.filter(id => !selectedOrders.includes(id));
+            selectedOrders.forEach(id => {
+                if (!activeOrderIds.includes(id)) {
+                    activeOrderIds.push(id);
+                }
+            });
+            activeOrderIds.sort();
+            syncOrderNotes();
+            renderOrderManager();
+            calculateReport();
+            setStatus(`Restored ${selectedOrders.length} order${selectedOrders.length === 1 ? '' : 's'} to the report.`);
+        }
+
+        function restoreOrder(orderId) {
+            removedOrderIds = removedOrderIds.filter(id => id !== orderId);
+            if (!activeOrderIds.includes(orderId)) {
+                activeOrderIds.push(orderId);
+                activeOrderIds.sort();
+            }
+            syncOrderNotes();
+            renderOrderManager();
+            calculateReport();
+        }
+
+        function renderOrderManager() {
+            let manager = document.getElementById('order-manager');
+            let activeDropdown = document.getElementById('active-orders-dropdown');
+            let activeOptions = document.getElementById('active-orders-options');
+            let removedSection = document.getElementById('removed-orders-section');
+            let removedDropdown = document.getElementById('removed-orders-dropdown');
+            let removedOptions = document.getElementById('removed-orders-options');
+
+            if (activeOrderIds.length === 0 && removedOrderIds.length === 0) {
+                manager.style.display = 'none';
+                return;
+            }
+
+            manager.style.display = 'flex';
+            activeDropdown.querySelector('summary').textContent = activeOrderIds.length
+                ? `Select active orders (${activeOrderIds.length})`
+                : 'No active orders';
+            activeOptions.innerHTML = activeOrderIds.map(id => `
+                <label class="order-option">
+                    <input type="checkbox" value="${escapeHTML(id)}">
+                    <span>${escapeHTML(id)}</span>
+                </label>
+            `).join('');
+
+            removedSection.style.display = removedOrderIds.length ? 'block' : 'none';
+            removedDropdown.querySelector('summary').textContent = `Select removed orders (${removedOrderIds.length})`;
+            removedOptions.innerHTML = removedOrderIds.map(id => `
+                <label class="order-option">
+                    <input type="checkbox" value="${escapeHTML(id)}">
+                    <span>${escapeHTML(id)}</span>
+                </label>
+            `).join('');
+        }
+
+        function getActiveItems() {
+            if (activeOrderIds.length === 0 && removedOrderIds.length === 0) {
+                return items;
+            }
+            return items.filter(item => !item.orderId || activeOrderIds.includes(item.orderId));
+        }
+
+        function getCategoryDisplayName(category) {
+            let names = {
+                'PLYWOOD SIDES': 'Plywood',
+                'SOLID SIDES': 'Solid',
+                'FAA SIDES': 'FAA',
+                'MDF / PBC / PVC & TAPE SIDES': 'MDF / PBC'
+            };
+
+            return names[category] || category;
+        }
+
+        function formatInches(value) {
+            return Number(value).toFixed(2).replace(/\.?0+$/, '');
+        }
+
+        function getSheetWidth(material) {
+            let materialLower = material.toLowerCase();
+            if (materialLower.includes('birch') || materialLower.includes('(60)')) {
+                return 60;
+            }
+            return 48;
+        }
+
+        function getCutOptimizationGroups(list, catName) {
+            if (catName === 'SOLID SIDES') return [];
+
+            let kerf = 0.188;
+            let trimPerSide = 0.25;
+            let grouped = {};
+
+            list.forEach(row => {
+                let sheetWidth = getSheetWidth(row.material);
+                let key = `${row.topEdge}|${row.material}|${sheetWidth}`;
+                if (!grouped[key]) {
+                    grouped[key] = {
+                        topEdge: row.topEdge,
+                        material: row.material,
+                        sheetWidth,
+                        usableWidth: sheetWidth - (2 * trimPerSide),
+                        heights: []
+                    };
+                }
+
+                for (let i = 0; i < row.rips; i++) {
+                    grouped[key].heights.push(row.height);
+                }
+            });
+
+            return Object.values(grouped).map(group => {
+                let sheets = packRipHeights(group.heights, group.usableWidth, kerf);
+                return {
+                    ...group,
+                    kerf,
+                    trimPerSide,
+                    sheets,
+                    patterns: summarizeSheetPatterns(sheets, group.usableWidth)
+                };
+            });
+        }
+
+        function packRipHeights(heights, usableWidth, kerf) {
+            let sheets = [];
+            let sortedHeights = [...heights].sort((a, b) => b - a);
+
+            sortedHeights.forEach(height => {
+                let bestSheet = null;
+                let bestRemaining = Infinity;
+
+                sheets.forEach(sheet => {
+                    let nextUsed = sheet.rips.length === 0 ? height : sheet.used + kerf + height;
+                    if (nextUsed <= usableWidth && usableWidth - nextUsed < bestRemaining) {
+                        bestSheet = sheet;
+                        bestRemaining = usableWidth - nextUsed;
+                    }
+                });
+
+                if (!bestSheet) {
+                    bestSheet = { rips: [], used: 0 };
+                    sheets.push(bestSheet);
+                }
+
+                bestSheet.used = bestSheet.rips.length === 0 ? height : bestSheet.used + kerf + height;
+                bestSheet.rips.push(height);
+            });
+
+            return sheets;
+        }
+
+        function summarizeSheetPatterns(sheets, usableWidth) {
+            let patternMap = {};
+
+            sheets.forEach(sheet => {
+                let counts = {};
+                sheet.rips.forEach(height => {
+                    let key = formatInches(height);
+                    counts[key] = (counts[key] || 0) + 1;
+                });
+
+                let ripCounts = Object.keys(counts)
+                    .map(Number)
+                    .sort((a, b) => b - a)
+                    .map(height => ({ height: formatInches(height), count: counts[formatInches(height)] }));
+                let pattern = ripCounts.map(rip => `${rip.height}x${rip.count}`).join('|');
+                let waste = formatInches(usableWidth - sheet.used);
+                let key = `${pattern}|${waste}`;
+
+                if (!patternMap[key]) {
+                    patternMap[key] = { ripCounts, waste, count: 0 };
+                }
+                patternMap[key].count++;
+            });
+
+            return Object.values(patternMap).sort((a, b) => b.count - a.count || Number(a.waste) - Number(b.waste));
+        }
+
+        function renderCutOptimization(list, catName) {
+            let groups = getCutOptimizationGroups(list, catName);
+            if (groups.length === 0) return '';
+
+            let html = '<div class="cut-optimization"><div class="cut-optimization-title">Cut Optimization</div>';
+            groups.forEach(group => {
+                html += `
+                    <div class="cut-optimization-meta">
+                        <b>${escapeHTML(group.material)}</b> / ${escapeHTML(group.topEdge)}
+                        - ${group.sheets.length} sheet${group.sheets.length === 1 ? '' : 's'}
+                        (${group.sheetWidth}" sheet, usable ${formatInches(group.usableWidth)}", kerf ${group.kerf}")
+                    </div>
+                `;
+
+                group.patterns.forEach(pattern => {
+                    let ripHtml = pattern.ripCounts.map(rip => `
+                        <span class="cut-rip-chip">${escapeHTML(rip.height)}&quot; - ${rip.count} rip${rip.count === 1 ? '' : 's'}</span>
+                    `).join('');
+
+                    html += `
+                        <div class="cut-pattern">
+                            <div class="cut-pattern-count">${pattern.count} sheet${pattern.count === 1 ? '' : 's'}</div>
+                            <div class="cut-rip-list">${ripHtml}</div>
+                            <div class="cut-waste">Waste ${escapeHTML(pattern.waste)}&quot;</div>
+                        </div>
+                    `;
+                });
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function getOptimizedSheetTotal(list, catName) {
+            return getCutOptimizationGroups(list, catName).reduce((total, group) => total + group.sheets.length, 0);
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('file-import').addEventListener('change', handleFileImport);
             document.getElementById('btn-clear-all').addEventListener('click', clearAll);
             document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
-            document.getElementById('btn-print').addEventListener('click', () => window.print());
+            document.getElementById('btn-print').addEventListener('click', printReport);
+            document.getElementById('btn-remove-selected-orders').addEventListener('click', removeSelectedOrders);
+            document.getElementById('btn-restore-selected-orders').addEventListener('click', restoreSelectedOrders);
             
             // Watch Involved Orders input changes to trigger Live Preview updates
             document.getElementById('order-notes').addEventListener('input', calculateReport);
 
-            window.addEventListener('beforeprint', () => {
-                let now = new Date();
-                let month = String(now.getMonth() + 1).padStart(2, '0');
-                let day = String(now.getDate()).padStart(2, '0');
-                let year = now.getFullYear();
-                
-                let hours = now.getHours();
-                let minutes = String(now.getMinutes()).padStart(2, '0');
-                let ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12;
-                let hoursStr = String(hours).padStart(2, '0');
-                
-                document.getElementById('print-timestamp').innerText = `${month}/${day}/${year} ${hoursStr}:${minutes} ${ampm}`;
-            });
+            window.addEventListener('beforeprint', preparePrint);
+            window.addEventListener('afterprint', finishPrint);
         });
 
         function clearAll() {
             if (confirm("Are you sure you want to clear all items?")) {
                 items = [];
+                computedGroups = [];
+                activeOrderIds = [];
+                removedOrderIds = [];
+                document.getElementById('order-notes').value = '';
+                renderOrderManager();
+                setStatus('');
                 calculateReport();
             }
         }
 
         function parseFraction(valStr) {
-            valStr = valStr.trim().replace(/\s+/g, ' ');
+            valStr = String(valStr ?? '')
+                .trim()
+                .replace(/["”″]/g, '')
+                .replace(/\bin(?:ches)?\.?$/i, '')
+                .replace(/^(-?\d+)-(\d+\/\d+)$/, '$1 $2')
+                .replace(/\s+/g, ' ');
+            if (!valStr) return 0;
+
             if (valStr.includes('/')) {
                 let parts = valStr.split(' ');
+                let whole = 0;
+                let fraction = parts[0];
+
                 if (parts.length === 2) {
-                    let whole = parseFloat(parts[0]);
-                    let fracParts = parts[1].split('/');
-                    return whole + (parseFloat(fracParts[0]) / parseFloat(fracParts[1]));
-                } else {
-                    let fracParts = valStr.split('/');
-                    return parseFloat(fracParts[0]) / parseFloat(fracParts[1]);
+                    whole = Number(parts[0]);
+                    fraction = parts[1];
                 }
+
+                let fracParts = fraction.split('/');
+                let numerator = Number(fracParts[0]);
+                let denominator = Number(fracParts[1]);
+
+                if (!Number.isFinite(whole) || !Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator === 0) {
+                    return 0;
+                }
+
+                return whole + (numerator / denominator);
             }
-            return parseFloat(valStr) || 0;
+
+            let parsed = Number(valStr);
+            return Number.isFinite(parsed) ? parsed : 0;
         }
 
         function handleFileImport(e) {
             let file = e.target.files[0];
             if (!file) return;
+            setStatus(`Importing ${file.name}...`);
             let reader = new FileReader();
             reader.onload = function(evt) {
                 let contents = evt.target.result;
@@ -618,18 +1292,23 @@
                     items = items.concat(parsed.items);
                     
                     if (parsed.orderIds.length > 0) {
-                        let prevVal = document.getElementById('order-notes').value;
-                        let combined = prevVal ? prevVal.split(',').map(x => x.trim()).filter(Boolean) : [];
-                        parsed.orderIds.forEach(id => {
-                            if (!combined.includes(id)) combined.push(id);
-                        });
-                        document.getElementById('order-notes').value = combined.join(', ');
+                        addActiveOrders(parsed.orderIds);
+                        syncOrderNotes();
+                        renderOrderManager();
                     }
                     
                     calculateReport();
+
+                    let materialCount = parsed.materials ? parsed.materials.length : new Set(parsed.items.map(item => item.material)).size;
+                    let skippedText = parsed.skippedRows > 0 ? ` Skipped ${parsed.skippedRows} row${parsed.skippedRows === 1 ? '' : 's'} missing usable dimensions or LF/Rips.` : '';
+                    setStatus(`Imported ${parsed.items.length} row${parsed.items.length === 1 ? '' : 's'} across ${materialCount} material${materialCount === 1 ? '' : 's'} from ${file.name}.${skippedText}`, parsed.skippedRows > 0);
                 } else {
-                    alert("Could not extract any valid items from the selected CSV.");
+                    let skippedText = parsed.skippedRows ? ` ${parsed.skippedRows} row${parsed.skippedRows === 1 ? '' : 's'} were present but missing usable dimensions or LF/Rips.` : '';
+                    setStatus(`Could not extract any valid items from the selected CSV.${skippedText}`, true);
                 }
+            };
+            reader.onerror = function() {
+                setStatus(`Could not read ${file.name}. Please try the file again.`, true);
             };
             reader.readAsText(file);
             // reset file input value so same file can be re-imported if needed
@@ -642,32 +1321,39 @@
                 delimiter = '\t';
             }
             let lines = text.split(/\r?\n/);
-            if (lines.length < 2) return { items: [], orderIds: [] };
+            if (lines.length < 2) return { items: [], orderIds: [], materials: [], skippedRows: 0 };
 
             function parseCSVLine(line) {
-                let rawCells = line.split(delimiter);
                 let cells = [];
-                let i = 0;
-                while (i < rawCells.length) {
-                    let cell = rawCells[i].trim();
-                    if (cell.startsWith('"') && !cell.endsWith('"') && i + 1 < rawCells.length) {
-                        let combined = cell;
-                        while (i + 1 < rawCells.length) {
-                            i++;
-                            combined += delimiter + rawCells[i];
-                            if (rawCells[i].trim().endsWith('"')) {
-                                break;
-                            }
+                let cell = '';
+                let inQuotes = false;
+
+                for (let i = 0; i < line.length; i++) {
+                    let char = line[i];
+                    let nextChar = line[i + 1];
+
+                    if (char === '"' && inQuotes && nextChar === '"') {
+                        cell += '"';
+                        i++;
+                    } else if (char === '"' && inQuotes) {
+                        let nextIsDelimiter = nextChar === delimiter || nextChar === undefined;
+                        if (nextIsDelimiter) {
+                            inQuotes = false;
+                        } else {
+                            cell += char;
                         }
-                        cell = combined;
+                    } else if (char === '"' && cell.trim() === '') {
+                        inQuotes = true;
+                    } else if (char === '"') {
+                        cell += char;
+                    } else if (char === delimiter && !inQuotes) {
+                        cells.push(cell.trim());
+                        cell = '';
+                    } else {
+                        cell += char;
                     }
-                    if (cell.startsWith('"') && cell.endsWith('"')) {
-                        cell = cell.slice(1, -1);
-                    }
-                    cell = cell.replace(/""/g, '"');
-                    cells.push(cell.trim());
-                    i++;
                 }
+                cells.push(cell.trim());
                 return cells;
             }
 
@@ -688,47 +1374,28 @@
             let ripsIdx = headers.findIndex(h => h === 'rips' || h.includes('ripcount') || h.includes('rip'));
             let partsIdx = headers.findIndex(h => h === 'parts' || h.includes('partcount'));
 
-            if (lfIdx !== -1 && ripsIdx !== -1) {
-                let parsedItems = [];
-                let orderIds = [];
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    let cells = parseCSVLine(lines[i]);
-                    
-                    let topEdge = edgeIdx !== -1 && edgeIdx < cells.length ? cells[edgeIdx] : "Clear Foil Bullnose";
-                    let material = matIdx !== -1 && matIdx < cells.length ? cells[matIdx] : "PF: 12MM Baltic Birch Ply";
-                    let parts = partsIdx !== -1 && partsIdx < cells.length ? parseInt(cells[partsIdx]) : 0;
-                    let height = heightIdx !== -1 && heightIdx < cells.length ? Math.ceil(parseFloat(cells[heightIdx]) * 2) / 2 : 4;
-                    let lf = lfIdx !== -1 && lfIdx < cells.length ? parseFloat(cells[lfIdx]) : 0;
-                    let rips = ripsIdx !== -1 && ripsIdx < cells.length ? parseFloat(cells[ripsIdx]) : 0;
-                    
-                    let oId = "";
-                    if (orderIdx !== -1 && orderIdx < cells.length && cells[orderIdx]) {
-                        oId = cells[orderIdx].replace(/[^0-9]/g, '');
-                        if (oId && !orderIds.includes(oId)) {
-                            orderIds.push(oId);
-                        }
-                    }
+            function getCell(cells, idx, fallback = '') {
+                return idx !== -1 && idx < cells.length ? cells[idx] : fallback;
+            }
 
-                    if (parts > 0 || lf > 0 || rips > 0) {
-                        material = material.trim();
-                        
-                        parsedItems.push({
-                            qty: Math.max(1, Math.ceil(parts / 4)),
-                            width: 0,
-                            depth: 0,
-                            height: height,
-                            topEdge: topEdge || "Clear Foil Bullnose",
-                            material: material || "PF: 12MM Baltic Birch Ply",
-                            parts: parts,
-                            lf: lf,
-                            rips: rips,
-                            preCalculated: true,
-                            orderId: oId
-                        });
-                    }
-                }
-                return { items: parsedItems, orderIds: orderIds };
+            function inferMaterial(cells) {
+                let direct = getCell(cells, matIdx).trim();
+                if (direct) return direct;
+
+                let materialTerms = /(?:\b(?:faa|mdf|pbc|melamine|particle|plywood|ply|birch|maple|oak|cherry|walnut|alder|mahogany|cedar|beech|fir|solid)\b|pf:|uf:)/i;
+                let edgeTerms = /\b(edge|foil|bullnose|banding|pvc|tape)\b/i;
+                let match = cells.find(cell => materialTerms.test(cell) && !edgeTerms.test(cell))
+                    || cells.find(cell => materialTerms.test(cell));
+                return match ? match.trim() : "PF: 12MM Baltic Birch Ply";
+            }
+
+            function inferTopEdge(cells) {
+                let direct = getCell(cells, edgeIdx).trim();
+                if (direct) return direct;
+
+                let edgeTerms = /\b(edge|foil|bullnose|banding|pvc|tape)\b/i;
+                let match = cells.find(cell => edgeTerms.test(cell));
+                return match ? match.trim() : "Clear Foil Bullnose";
             }
 
             // Adaptive fallback if header-based detection fails for key columns
@@ -783,17 +1450,23 @@
 
             let parsedItems = [];
             let orderIds = [];
+            let materials = [];
+            let skippedRows = 0;
 
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 let cells = parseCSVLine(lines[i]);
                 
-                let qty = qtyIdx !== -1 && qtyIdx < cells.length ? parseInt(cells[qtyIdx]) : 1;
+                let qty = qtyIdx !== -1 && qtyIdx < cells.length ? Math.round(parseFraction(cells[qtyIdx])) : 1;
                 let width = widthIdx !== -1 && widthIdx < cells.length ? parseFraction(cells[widthIdx]) : 0;
-                let depth = depthIdx !== -1 && depthIdx < cells.length ? parseFloat(cells[depthIdx]) : 0;
-                let height = heightIdx !== -1 && heightIdx < cells.length ? Math.ceil(parseFloat(cells[heightIdx]) * 2) / 2 : 0;
-                let material = matIdx !== -1 && matIdx < cells.length ? cells[matIdx] : "PF: 12MM Baltic Birch Ply";
-                let topEdge = edgeIdx !== -1 && edgeIdx < cells.length ? cells[edgeIdx] : "Clear Foil Bullnose";
+                let depth = depthIdx !== -1 && depthIdx < cells.length ? parseFraction(cells[depthIdx]) : 0;
+                let height = heightIdx !== -1 && heightIdx < cells.length ? Math.ceil(parseFraction(cells[heightIdx]) * 2) / 2 : 0;
+                let material = inferMaterial(cells).trim();
+                let topEdge = inferTopEdge(cells).trim();
+                let parts = partsIdx !== -1 && partsIdx < cells.length ? Math.round(parseFraction(cells[partsIdx])) : 0;
+                let lf = lfIdx !== -1 && lfIdx < cells.length ? parseFraction(cells[lfIdx]) : 0;
+                let rips = ripsIdx !== -1 && ripsIdx < cells.length ? parseFraction(cells[ripsIdx]) : 0;
+                let itemAdded = false;
                 
                 let oId = "";
                 if (orderIdx !== -1 && orderIdx < cells.length && cells[orderIdx]) {
@@ -803,9 +1476,24 @@
                     }
                 }
 
-                if (qty > 0 && width > 0 && depth > 0 && height > 0) {
-                    material = material.trim();
-                    
+                if (parts > 0 || lf > 0 || rips > 0) {
+                    let boxes = parts > 0 ? Math.max(1, Math.ceil(parts / 4)) : Math.max(1, qty);
+
+                    parsedItems.push({
+                        qty: boxes,
+                        width: 0,
+                        depth: 0,
+                        height: height || 4,
+                        topEdge: topEdge || "Clear Foil Bullnose",
+                        material: material || "PF: 12MM Baltic Birch Ply",
+                        parts: parts || boxes * 4,
+                        lf: lf,
+                        rips: rips,
+                        preCalculated: true,
+                        orderId: oId
+                    });
+                    itemAdded = true;
+                } else if (qty > 0 && width > 0 && depth > 0 && height > 0) {
                     parsedItems.push({
                         qty,
                         width,
@@ -815,10 +1503,20 @@
                         material: material || "PF: 12MM Baltic Birch Ply",
                         orderId: oId
                     });
+                    itemAdded = true;
+                }
+
+                if (itemAdded) {
+                    let materialName = material || "PF: 12MM Baltic Birch Ply";
+                    if (!materials.includes(materialName)) {
+                        materials.push(materialName);
+                    }
+                } else {
+                    skippedRows++;
                 }
             }
             
-            return { items: parsedItems, orderIds: orderIds };
+            return { items: parsedItems, orderIds: orderIds, materials: materials, skippedRows: skippedRows };
         }
 
 
@@ -832,32 +1530,37 @@
             if (matLower.startsWith('faa') || matLower.includes('faa:')) {
                 return 'FAA SIDES';
             }
-            
-            // 2. MDF / PBC / or anything with pvc/tape edges goes to MDF/PBC/PVC
-            if (matLower.startsWith('mdf') || matLower.startsWith('pbc') || matLower.includes('melamine') || matLower.includes('particle') || edgeLower.includes('pvc') || edgeLower.includes('tape')) {
+
+            // PVC, tape, and wood tape edges route together even when the substrate is plywood.
+            if (edgeLower.includes('pvc') || edgeLower.includes('tape') || edgeLower.includes('wood tape')) {
                 return 'MDF / PBC / PVC & TAPE SIDES';
             }
             
-            // 3. Plywood (contains 'ply' or 'birch')
+            // 2. Plywood (contains 'ply' or 'birch')
             if (matLower.includes('ply') || matLower.includes('birch')) {
                 return 'PLYWOOD SIDES';
             }
             
-            // 4. Solid Wood (starts with UF: or PF: or contains solid wood species)
+            // 3. Solid Wood (starts with UF: or PF: or contains solid wood species)
             if (matLower.startsWith('uf') || matLower.startsWith('pf') || matLower.includes('solid') || matLower.includes('alder') || matLower.includes('mahogany') || matLower.includes('cedar') || matLower.includes('beech') || matLower.includes('maple') || matLower.includes('oak') || matLower.includes('cherry') || matLower.includes('walnut') || matLower.includes('fir')) {
                 return 'SOLID SIDES';
+            }
+
+            // 4. MDF / PBC / melamine / particle-board materials
+            if (matLower.startsWith('mdf') || matLower.startsWith('pbc') || matLower.includes('melamine') || matLower.includes('particle')) {
+                return 'MDF / PBC / PVC & TAPE SIDES';
             }
             
             return 'MDF / PBC / PVC & TAPE SIDES'; // Default fallback
         }
 
-        let computedGroups = [];
-
         function calculateReport() {
             let reportCard = document.getElementById('report-card');
+            let reportItems = getActiveItems();
             
-            if (items.length === 0) {
+            if (items.length === 0 || reportItems.length === 0) {
                 reportCard.style.display = 'none';
+                computedGroups = [];
                 return;
             }
 
@@ -871,7 +1574,7 @@
 
             let rawGroups = {};
 
-            items.forEach(item => {
+            reportItems.forEach(item => {
                 let key = `${item.topEdge}|${item.material}|${item.height}`;
                 if (!rawGroups[key]) {
                     rawGroups[key] = {
@@ -879,6 +1582,7 @@
                         material: item.material,
                         height: item.height,
                         boxes: 0,
+                        parts: 0,
                         totalInches: 0,
                         preCalculatedLF: 0,
                         preCalculatedRips: 0,
@@ -893,12 +1597,14 @@
 
                 if (item.preCalculated) {
                     rawGroups[key].boxes += item.qty;
+                    rawGroups[key].parts += item.parts;
                     rawGroups[key].preCalculatedLF += item.lf;
                     rawGroups[key].preCalculatedRips += item.rips;
                     rawGroups[key].hasPreCalculated = true;
                 } else {
                     let perimeter = (2 * item.depth) + (2 * item.width);
                     rawGroups[key].boxes += item.qty;
+                    rawGroups[key].parts += item.qty * 4;
                     rawGroups[key].totalInches += perimeter * item.qty;
                 }
             });
@@ -919,13 +1625,14 @@
 
                 let lfRound = Math.ceil(lf);
                 let ripsRound = Math.ceil(rips);
-                let parts = g.hasPreCalculated ? g.boxes * 4 : g.boxes * 4; // wait, parts is always boxes * 4
+                let parts = g.parts;
+                let boxes = g.hasPreCalculated && parts > 0 ? Math.ceil(parts / 4) : g.boxes;
 
                 let groupObj = {
                     topEdge: g.topEdge,
                     material: g.material,
                     height: g.height,
-                    boxes: g.boxes,
+                    boxes: boxes,
                     parts: parts,
                     lf: lfRound,
                     rips: ripsRound,
@@ -950,6 +1657,7 @@
             for (let catName in groupedCategories) {
                 let list = groupedCategories[catName];
                 if (list.length === 0) continue;
+                let displayCatName = getCategoryDisplayName(catName);
 
                 // Sort list by top edge, then material name, then height
                 list.sort((a, b) => {
@@ -972,18 +1680,7 @@
                 // Add print-only header for each sheet
                 let printHeader = document.createElement('div');
                 printHeader.className = 'print-header';
-                
-                let now = new Date();
-                let month = String(now.getMonth() + 1).padStart(2, '0');
-                let day = String(now.getDate()).padStart(2, '0');
-                let year = now.getFullYear();
-                let hours = now.getHours();
-                let minutes = String(now.getMinutes()).padStart(2, '0');
-                let ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12;
-                let hoursStr = String(hours).padStart(2, '0');
-                let formattedTime = `${month}/${day}/${year} ${hoursStr}:${minutes} ${ampm}`;
+                let formattedTime = formatTimestamp();
 
                 let categoryOrderIds = [];
                 list.forEach(g => {
@@ -997,15 +1694,18 @@
                 });
                 categoryOrderIds.sort();
                 printHeader.innerHTML = `
-                    <span class="print-title">Top Edge Report</span>
-                    <span class="print-timestamp">${formattedTime}</span>
+                    <span>
+                        <span class="print-title">Allmoxy Top Edge Report</span>
+                        <span class="print-subtitle">${escapeHTML(displayCatName)}</span>
+                    </span>
+                    <span class="print-timestamp">${escapeHTML(formattedTime)}</span>
                 `;
                 groupWrapper.appendChild(printHeader);
 
                 let header = document.createElement('div');
                 header.className = 'report-category-header';
                 let subtext = categoryOrderIds.length > 0 ? ` (Orders: ${categoryOrderIds.join(', ')})` : '';
-                header.innerText = catName + subtext;
+                header.innerText = displayCatName + subtext;
                 groupWrapper.appendChild(header);
 
                 let div = document.createElement('div');
@@ -1033,26 +1733,12 @@
                 let catParts = 0;
                 let catLF = 0;
                 let catRips = 0;
-                let catSheetsSum = 0;
 
                 list.forEach(g => {
                     catBoxes += g.boxes;
                     catParts += g.parts;
                     catLF += g.lf;
                     catRips += g.rips;
-
-                    // Calculate sheets needed for Plywood sides
-                    if (catName === 'PLYWOOD SIDES') {
-                        let isBalticBirch = g.material.toLowerCase().includes('birch') && !g.material.toLowerCase().includes('faa');
-                        let sheetWidth = isBalticBirch ? 60.0 : 48.0;
-                        let trim = 0.188;
-                        let kerf = 0.1875; // 3/16"
-                        let usableWidth = sheetWidth - (2 * trim);
-                        let ripsPerSheet = Math.floor((usableWidth + kerf) / (g.height + kerf));
-                        if (ripsPerSheet > 0) {
-                            catSheetsSum += (g.rips / ripsPerSheet);
-                        }
-                    }
 
                     let badgeClass = 'badge-mdf';
                     if (catName === 'PLYWOOD SIDES') badgeClass = 'badge-birch';
@@ -1065,14 +1751,14 @@
 
                     html += `
                         <tr${rowClass}>
-                            <td><b>${g.topEdge}</b></td>
-                            <td><span class="badge ${badgeClass}">${g.material}</span></td>
+                            <td><b>${escapeHTML(g.topEdge)}</b></td>
+                            <td><span class="badge ${badgeClass}">${escapeHTML(g.material)}</span></td>
                             <td style="text-align: center;">${g.boxes}</td>
                             <td style="text-align: center;">${g.parts}</td>
-                            <td style="text-align: center;">${displayHeight}</td>
+                            <td style="text-align: center;">${escapeHTML(displayHeight)}</td>
                             <td style="text-align: center; font-weight: bold;">${g.lf}</td>
                             <td style="text-align: center; font-weight: bold; color: #0284c7;">${g.rips}</td>
-                            <td style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${g.ripSize}</td>
+                            <td style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${escapeHTML(g.ripSize)}</td>
                             <td style="text-align: center;"><input type="checkbox" style="width: 16px; height: 16px; cursor: pointer;"></td>
                         </tr>
                     `;
@@ -1085,14 +1771,14 @@
 
                 // Add Category Total Row
                 let ripsDisplay = catRips;
-                if (catName === 'PLYWOOD SIDES' && catSheetsSum > 0) {
-                    let roundedSheets = Math.ceil(catSheetsSum);
-                    ripsDisplay = `${catRips} <span style="font-size: 0.85rem; font-weight: normal; color: #475569;">(${roundedSheets} Sheet${roundedSheets > 1 ? 's' : ''})</span>`;
+                let optimizedSheetTotal = getOptimizedSheetTotal(list, catName);
+                if (optimizedSheetTotal > 0) {
+                    ripsDisplay = `${catRips} <span style="font-size: 0.85rem; font-weight: normal; color: #475569;">(${optimizedSheetTotal} Sheet${optimizedSheetTotal === 1 ? '' : 's'})</span>`;
                 }
 
                 html += `
                     <tr class="total-row">
-                        <td colspan="2">${catName === 'PLYWOOD SIDES' ? 'TOTAL' : `TOTAL ${catName}`}</td>
+                        <td colspan="2">TOTAL ${displayCatName}</td>
                         <td style="text-align: center;">${catBoxes}</td>
                         <td style="text-align: center;">${catParts}</td>
                         <td></td>
@@ -1106,16 +1792,31 @@
                 html += '</tbody></table>';
                 div.innerHTML = html;
                 groupWrapper.appendChild(div);
+
+                let optimizationHtml = renderCutOptimization(list, catName);
+                if (optimizationHtml) {
+                    let optimizationDiv = document.createElement('div');
+                    optimizationDiv.innerHTML = optimizationHtml;
+                    groupWrapper.appendChild(optimizationDiv.firstElementChild);
+                }
                 container.appendChild(groupWrapper);
             }
 
-
+            let grandTotal = document.createElement('div');
+            grandTotal.className = 'grand-total-box';
+            grandTotal.innerHTML = `
+                <span>Total Boxes: ${grandBoxes}</span>
+                <span>Total Parts: ${grandParts}</span>
+                <span>Total LF: ${grandLF}</span>
+                <span>Total Rips: ${grandRips}</span>
+            `;
+            container.appendChild(grandTotal);
 
             // Active Order note updates
             let notesInput = document.getElementById('order-notes').value.trim();
             let notesDisplay = document.getElementById('batch-notes-display');
             if (notesInput) {
-                notesDisplay.innerHTML = `📝 <b>Orders Included in Batch:</b> <code>${notesInput}</code>`;
+                notesDisplay.innerHTML = `📝 <b>Orders Included in Batch:</b> <code>${escapeHTML(notesInput)}</code>`;
                 notesDisplay.style.display = 'block';
             } else {
                 notesDisplay.style.display = 'none';
@@ -1131,15 +1832,15 @@
             let notesInput = document.getElementById('order-notes').value.trim();
             
             if (notesInput) {
-                csvRows.push(`"Orders Included in Batch: ${notesInput}"`);
+                csvRows.push(escapeCSV(`Orders Included in Batch: ${notesInput}`));
                 csvRows.push('');
             }
             
-            csvRows.push(['Category', 'Top Edge', 'Material', 'Boxes', 'Parts', 'Height', 'LF (Rounded)', 'Rips (Rounded)', 'Rip Size'].map(x => `"${x}"`).join(','));
+            csvRows.push(['Category', 'Top Edge', 'Material', 'Boxes', 'Parts', 'Height', 'LF (Rounded)', 'Rips (Rounded)', 'Rip Size'].map(escapeCSV).join(','));
 
             computedGroups.forEach(g => {
                 csvRows.push([
-                    g.category,
+                    getCategoryDisplayName(g.category),
                     g.topEdge,
                     g.material,
                     g.boxes,
@@ -1148,7 +1849,7 @@
                     g.lf,
                     g.rips,
                     g.ripSize
-                ].map(x => `"${x}"`).join(','));
+                ].map(escapeCSV).join(','));
             });
 
             let grandBoxes = computedGroups.reduce((a, b) => a + b.boxes, 0);
@@ -1167,7 +1868,7 @@
                 grandLF,
                 grandRips,
                 ''
-            ].map(x => `"${x}"`).join(','));
+            ].map(escapeCSV).join(','));
 
             let csvString = csvRows.join('\n');
             let blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
@@ -1178,6 +1879,7 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
