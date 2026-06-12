@@ -650,6 +650,25 @@
                 page-break-inside: auto;
             }
 
+            .report-table th,
+            .report-table td {
+                padding: 3px 4px !important;
+                font-size: 10.5px !important;
+                line-height: 1.2 !important;
+                white-space: normal !important;
+                overflow-wrap: anywhere !important;
+            }
+
+            .report-table th:nth-child(1), .report-table td:nth-child(1) { width: 19% !important; }
+            .report-table th:nth-child(2), .report-table td:nth-child(2) { width: 26% !important; }
+            .report-table th:nth-child(3), .report-table td:nth-child(3) { width: 8% !important; }
+            .report-table th:nth-child(4), .report-table td:nth-child(4) { width: 7% !important; }
+            .report-table th:nth-child(5), .report-table td:nth-child(5) { width: 7% !important; }
+            .report-table th:nth-child(6), .report-table td:nth-child(6) { width: 7% !important; }
+            .report-table th:nth-child(7), .report-table td:nth-child(7) { width: 8% !important; }
+            .report-table th:nth-child(8), .report-table td:nth-child(8) { width: 11% !important; }
+            .report-table th:nth-child(9), .report-table td:nth-child(9) { width: 7% !important; }
+
             thead {
                 display: table-header-group;
             }
@@ -868,6 +887,7 @@
                 <div style="display: flex; gap: 0.5rem;">
                     <button class="btn btn-secondary" id="btn-print">🖨️ Print Report</button>
                     <button class="btn btn-secondary" id="btn-export-csv">📂 Export CSV</button>
+                    <button class="btn btn-secondary" id="btn-sync-saw">Sync Report to Saw</button>
                 </div>
             </div>
             
@@ -887,6 +907,7 @@
         let activeOrderIds = [];
         let removedOrderIds = [];
         let originalDocumentTitle = document.title;
+        const SAW_SYNC_URL = "http://server24:8787/sync-report";
 
         function formatTimestamp(date = new Date()) {
             let weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
@@ -1223,6 +1244,7 @@
             document.getElementById('btn-clear-all').addEventListener('click', clearAll);
             document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
             document.getElementById('btn-print').addEventListener('click', printReport);
+            document.getElementById('btn-sync-saw').addEventListener('click', syncReportToSaw);
             document.getElementById('btn-remove-selected-orders').addEventListener('click', removeSelectedOrders);
             document.getElementById('btn-restore-selected-orders').addEventListener('click', restoreSelectedOrders);
             
@@ -1823,6 +1845,203 @@
             }
 
             reportCard.style.display = 'block';
+        }
+
+        function getSawSheetTotal() {
+            let groupsByCategory = {};
+            computedGroups.forEach(group => {
+                if (group.category === 'SOLID SIDES') return;
+                if (!groupsByCategory[group.category]) {
+                    groupsByCategory[group.category] = [];
+                }
+                groupsByCategory[group.category].push(group);
+            });
+
+            return Object.keys(groupsByCategory).reduce((total, category) => {
+                return total + getOptimizedSheetTotal(groupsByCategory[category], category);
+            }, 0);
+        }
+
+        function getSawSummary() {
+            return {
+                parts: computedGroups.reduce((sum, g) => sum + g.parts, 0),
+                boxes: computedGroups.reduce((sum, g) => sum + g.boxes, 0),
+                lf: computedGroups.reduce((sum, g) => sum + g.lf, 0),
+                rips: computedGroups.reduce((sum, g) => sum + g.rips, 0),
+                sheets: getSawSheetTotal()
+            };
+        }
+
+        function buildSawReportHtml() {
+            let reportCard = document.getElementById('report-card').cloneNode(true);
+            reportCard.querySelectorAll('button').forEach(button => button.remove());
+            reportCard.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.disabled = true;
+            });
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allmoxy Top Edge Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #0f172a;
+            padding: 24px;
+            line-height: 1.4;
+        }
+        .card {
+            box-shadow: none !important;
+            border: none !important;
+            display: block !important;
+        }
+        .grid-header-actions {
+            display: none !important;
+        }
+        .print-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #0f172a;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+        }
+        .print-title {
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .print-subtitle {
+            display: block;
+            color: #475569;
+            margin-top: 2px;
+        }
+        .print-timestamp {
+            font-weight: 700;
+            text-align: right;
+        }
+        .report-category-header {
+            background: #cbd5e1;
+            border-bottom: 2px solid #0f172a;
+            border-radius: 8px 8px 0 0;
+            font-weight: 700;
+            padding: 7px 9px;
+            margin-top: 16px;
+        }
+        .grid-container {
+            overflow: visible;
+            border: none;
+            margin-bottom: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        th, td {
+            border-bottom: 1px solid #cbd5e1;
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background: #f1f5f9;
+            font-weight: 700;
+        }
+        .badge {
+            border: 1px solid #0f172a;
+            border-radius: 5px;
+            padding: 1px 4px;
+            font-weight: 700;
+        }
+        .total-row {
+            background: #f1f5f9;
+            font-weight: 700;
+        }
+        .highlight-row {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .cut-optimization {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 8px 0 16px;
+        }
+        .cut-optimization-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .cut-pattern {
+            display: grid;
+            grid-template-columns: 100px 1fr 90px;
+            gap: 8px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+        .cut-rip-chip {
+            display: inline-block;
+            border: 1px solid #cbd5e1;
+            border-radius: 999px;
+            background: #ffffff;
+            font-weight: 700;
+            margin: 2px;
+            padding: 2px 7px;
+        }
+        .grand-total-box {
+            border: 1px solid #0f172a;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            font-weight: 700;
+            padding: 10px;
+            margin-top: 14px;
+        }
+    </style>
+</head>
+<body>
+    ${reportCard.outerHTML}
+</body>
+</html>`;
+        }
+
+        async function syncReportToSaw() {
+            if (computedGroups.length === 0) {
+                setStatus('No report to sync.', true);
+                return;
+            }
+
+            let orders = activeOrderIds.length
+                ? activeOrderIds
+                : document.getElementById('order-notes').value.split(',').map(x => x.trim()).filter(Boolean);
+
+            try {
+                setStatus('Syncing report to saw...');
+                let response = await fetch(SAW_SYNC_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: 'Allmoxy Top Edge Report',
+                        orders,
+                        summary: getSawSummary(),
+                        html: buildSawReportHtml(),
+                        syncedBy: window.navigator.userAgent.includes('Windows') ? 'Windows User' : 'Office'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Sync failed with status ${response.status}`);
+                }
+
+                let result = await response.json().catch(() => ({}));
+                let fileText = result.file ? ` (${result.file})` : '';
+                setStatus(`Report synced to saw dashboard${fileText}.`);
+            } catch (error) {
+                console.error(error);
+                setStatus('Could not sync report to saw. Check server24 helper connection.', true);
+            }
         }
 
         function exportCSV() {
