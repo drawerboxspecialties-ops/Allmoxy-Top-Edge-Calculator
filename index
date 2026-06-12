@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBS Drawers - Top Edge Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --accent-color: #4facfe;
+            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --border-color: #e5e7eb;
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 2rem auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .logo h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 900px) {
+            .container {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 0.8rem;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        select, input[type="text"], input[type="number"], textarea {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 8px rgba(79, 172, 254, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            padding: 0.85rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f9fafb;
+        }
+
+        .grid-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grid-container {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: #ffffff;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9fafb;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 0.75rem 0.85rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .delete-btn {
+            background: transparent;
+            color: var(--danger-color);
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+
+        .report-category-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background-color: #e2e8f0;
+            color: #334155;
+            padding: 0.6rem 1rem;
+            border-radius: 8px 8px 0 0;
+            margin-top: 1rem;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .report-table th {
+            background-color: #f8fafc;
+            color: #475569;
+            border-bottom-color: #cbd5e1;
+        }
+
+        .total-row {
+            background-color: #f1f5f9 !important;
+            font-weight: 700;
+            color: #0f172a;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .grand-total-box {
+            background-color: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0369a1;
+            margin-top: 1rem;
+        }
+
+        .note-box {
+            background-color: #ffffff;
+            border-left: 4px solid var(--accent-color);
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            border-left-width: 4px;
+        }
+
+        .badge {
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .report-table {
+            width: 100% !important;
+        }
+
+        .report-table th, .report-table td {
+            padding: 0.35rem 0.6rem !important;
+            white-space: nowrap !important;
+        }
+
+        .badge-birch {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-maple {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-faa {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-mdf {
+            background-color: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .input-inline {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-main);
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0.2rem;
+            border-radius: 4px;
+        }
+
+        .input-inline:hover {
+            border-color: var(--border-color);
+            background: #f9fafb;
+        }
+
+        .input-inline:focus {
+            background: #ffffff;
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 4px rgba(79, 172, 254, 0.2);
+        }
+
+        .highlight-row {
+            background-color: #fef2f2 !important; /* Soft rose */
+            border-left: 4px solid var(--danger-color);
+        }
+        .highlight-row td {
+            color: #991b1b !important;
+            font-weight: 600;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            @page {
+                size: letter;
+                margin: 0.6in 0.8in;
+            }
+            body {
+                background-color: #ffffff;
+                color: #000000;
+                padding: 0;
+                font-size: 13px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #report-card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: block !important;
+            }
+            .highlight-row {
+                background-color: #fee2e2 !important;
+            }
+            .highlight-row td {
+                color: #991b1b !important;
+            }
+            
+            .category-print-group {
+                page-break-inside: avoid;
+                width: 100% !important;
+            }
+
+            .category-print-group:not(:first-of-type) {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+
+            header, 
+            .card:not(#report-card), 
+            .btn, 
+            .delete-btn,
+            #batch-notes-display {
+                display: none !important;
+            }
+            
+            .card.report-section {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            
+            .grid-container {
+                max-height: none !important;
+                overflow: visible !important;
+                border: none !important;
+                margin-bottom: 0.8rem !important;
+                page-break-inside: auto;
+                width: 100% !important;
+            }
+            
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                page-break-inside: auto;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            tr {
+                page-break-inside: avoid;
+            }
+
+            .report-category-header {
+                background-color: #cbd5e1 !important;
+                color: #000000 !important;
+                border-bottom: 2px solid #000000 !important;
+                padding: 3px 6px !important;
+                font-size: 14px !important;
+                font-weight: bold !important;
+                margin-top: 0.5rem !important;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            th {
+                background-color: #f3f4f6 !important;
+                color: #000000 !important;
+                border-bottom: 1.5px solid #000000 !important;
+                padding: 3px 5px !important;
+                font-size: 12px !important;
+                line-height: 1.2 !important;
+            }
+            
+            td {
+                border-bottom: 1px solid #cbd5e1 !important;
+                padding: 3px 5px !important;
+                font-size: 12px !important;
+                line-height: 1.2 !important;
+            }
+
+            .badge {
+                border: 1px solid #000 !important;
+                background-color: transparent !important;
+                color: #000 !important;
+                padding: 1px 3px !important;
+                font-size: 11px !important;
+            }
+            
+            #batch-notes-display {
+                border-left: 3px solid #000 !important;
+                box-shadow: none !important;
+                background-color: #fff !important;
+                color: #000 !important;
+                padding: 5px !important;
+                margin-bottom: 0.8rem !important;
+                font-size: 12px !important;
+            }
+
+            .grand-total-box {
+                border: 1.5px solid #000000 !important;
+                background-color: transparent !important;
+                color: #000000 !important;
+                padding: 6px !important;
+                margin-top: 0.8rem !important;
+                font-size: 13px !important;
+                page-break-inside: avoid;
+            }
+
+            .print-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                width: 100% !important;
+                border-bottom: 2px solid #000000 !important;
+                margin-bottom: 12px !important;
+                padding-bottom: 6px !important;
+                font-family: inherit !important;
+            }
+
+            .print-header .print-title {
+                font-size: 16px !important;
+                font-weight: bold !important;
+                color: #000000 !important;
+            }
+
+            .print-header .print-timestamp {
+                font-size: 13px !important;
+                font-weight: normal !important;
+                color: #000000 !important;
+            }
+
+            .grid-header-actions h2 {
+                display: none !important;
+            }
+        }
+
+        .print-header {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>DBS DRAWERS</h1>
+            <p>Top Edge Production Calculator</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Import Card -->
+        <div class="card">
+            <h2>1. Import Data</h2>
+            <input type="file" id="file-import" accept=".csv" style="display: none;">
+            <button class="btn btn-secondary" onclick="document.getElementById('file-import').click()">📁 Upload Allmoxy CSV</button>
+            <button class="btn btn-danger" id="btn-clear-all" style="margin-top: 0.5rem; width: 100%;">🗑️ Clear All Data</button>
+            
+            <div class="form-group" style="margin-top: 1rem;">
+                <label for="order-notes">Involved Orders / Notes</label>
+                <input type="text" id="order-notes" placeholder="e.g. 601697, 601781">
+            </div>
+        </div>
+
+        <!-- Live Computed Report Output Card -->
+        <div class="card" id="report-card" style="display: none; flex-grow: 1;">
+            <div class="grid-header-actions">
+                <h2>2. Computed Top Edge Report (Live Preview)</h2>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" id="btn-print">🖨️ Print Report</button>
+                    <button class="btn btn-secondary" id="btn-export-csv">📂 Export CSV</button>
+                </div>
+            </div>
+            
+            <div id="batch-notes-display" class="note-box" style="display: none; border-left-color: var(--accent-color);">
+                <!-- Active Order note displays here -->
+            </div>
+
+            <div id="tables-container">
+                <!-- Grouped category tables will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let items = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('file-import').addEventListener('change', handleFileImport);
+            document.getElementById('btn-clear-all').addEventListener('click', clearAll);
+            document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
+            document.getElementById('btn-print').addEventListener('click', () => window.print());
+            
+            // Watch Involved Orders input changes to trigger Live Preview updates
+            document.getElementById('order-notes').addEventListener('input', calculateReport);
+
+            window.addEventListener('beforeprint', () => {
+                let now = new Date();
+                let month = String(now.getMonth() + 1).padStart(2, '0');
+                let day = String(now.getDate()).padStart(2, '0');
+                let year = now.getFullYear();
+                
+                let hours = now.getHours();
+                let minutes = String(now.getMinutes()).padStart(2, '0');
+                let ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                let hoursStr = String(hours).padStart(2, '0');
+                
+                document.getElementById('print-timestamp').innerText = `${month}/${day}/${year} ${hoursStr}:${minutes} ${ampm}`;
+            });
+        });
+
+        function clearAll() {
+            if (confirm("Are you sure you want to clear all items?")) {
+                items = [];
+                calculateReport();
+            }
+        }
+
+        function parseFraction(valStr) {
+            valStr = valStr.trim().replace(/\s+/g, ' ');
+            if (valStr.includes('/')) {
+                let parts = valStr.split(' ');
+                if (parts.length === 2) {
+                    let whole = parseFloat(parts[0]);
+                    let fracParts = parts[1].split('/');
+                    return whole + (parseFloat(fracParts[0]) / parseFloat(fracParts[1]));
+                } else {
+                    let fracParts = valStr.split('/');
+                    return parseFloat(fracParts[0]) / parseFloat(fracParts[1]);
+                }
+            }
+            return parseFloat(valStr) || 0;
+        }
+
+        function handleFileImport(e) {
+            let file = e.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(evt) {
+                let contents = evt.target.result;
+                let parsed = parseCSV(contents);
+                if (parsed.items.length > 0) {
+                    items = items.concat(parsed.items);
+                    
+                    if (parsed.orderIds.length > 0) {
+                        let prevVal = document.getElementById('order-notes').value;
+                        let combined = prevVal ? prevVal.split(',').map(x => x.trim()).filter(Boolean) : [];
+                        parsed.orderIds.forEach(id => {
+                            if (!combined.includes(id)) combined.push(id);
+                        });
+                        document.getElementById('order-notes').value = combined.join(', ');
+                    }
+                    
+                    calculateReport();
+                } else {
+                    alert("Could not extract any valid items from the selected CSV.");
+                }
+            };
+            reader.readAsText(file);
+            // reset file input value so same file can be re-imported if needed
+            e.target.value = '';
+        }
+
+        function parseCSV(text) {
+            let delimiter = ',';
+            if (text.includes('\t') && (text.split('\t').length > text.split(',').length)) {
+                delimiter = '\t';
+            }
+            let lines = text.split(/\r?\n/);
+            if (lines.length < 2) return { items: [], orderIds: [] };
+
+            function parseCSVLine(line) {
+                let rawCells = line.split(delimiter);
+                let cells = [];
+                let i = 0;
+                while (i < rawCells.length) {
+                    let cell = rawCells[i].trim();
+                    if (cell.startsWith('"') && !cell.endsWith('"') && i + 1 < rawCells.length) {
+                        let combined = cell;
+                        while (i + 1 < rawCells.length) {
+                            i++;
+                            combined += delimiter + rawCells[i];
+                            if (rawCells[i].trim().endsWith('"')) {
+                                break;
+                            }
+                        }
+                        cell = combined;
+                    }
+                    if (cell.startsWith('"') && cell.endsWith('"')) {
+                        cell = cell.slice(1, -1);
+                    }
+                    cell = cell.replace(/""/g, '"');
+                    cells.push(cell.trim());
+                    i++;
+                }
+                return cells;
+            }
+
+            let firstLineCells = parseCSVLine(lines[0]);
+            let headers = firstLineCells.map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+            
+            // Find column indexes
+            let qtyIdx = headers.findIndex(h => h.includes('qty') || h.includes('quant') || h.includes('pieces') || h.includes('piece') || h.includes('count'));
+            let widthIdx = headers.findIndex(h => h === 'w' || h === 'width' || h.includes('width'));
+            let depthIdx = headers.findIndex(h => h === 'd' || h === 'depth' || h.includes('depth') || h.includes('length') || h === 'len');
+            let heightIdx = headers.findIndex(h => h === 'h' || h === 'height' || h.includes('height'));
+            let matIdx = headers.findIndex(h => h.includes('material') || h.includes('species') || h.includes('wood') || h === 'mat');
+            let edgeIdx = headers.findIndex(h => h.includes('edge') || h.includes('banding') || h.includes('foil') || h.includes('tape'));
+            let orderIdx = headers.findIndex(h => h.includes('order') || h.includes('invoice') || h.includes('quote'));
+
+            // Find pre-calculated columns
+            let lfIdx = headers.findIndex(h => h === 'lf' || h.includes('linearfeet') || h.includes('linearfoot'));
+            let ripsIdx = headers.findIndex(h => h === 'rips' || h.includes('ripcount') || h.includes('rip'));
+            let partsIdx = headers.findIndex(h => h === 'parts' || h.includes('partcount'));
+
+            if (lfIdx !== -1 && ripsIdx !== -1) {
+                let parsedItems = [];
+                let orderIds = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    let cells = parseCSVLine(lines[i]);
+                    
+                    let topEdge = edgeIdx !== -1 && edgeIdx < cells.length ? cells[edgeIdx] : "Clear Foil Bullnose";
+                    let material = matIdx !== -1 && matIdx < cells.length ? cells[matIdx] : "PF: 12MM Baltic Birch Ply";
+                    let parts = partsIdx !== -1 && partsIdx < cells.length ? parseInt(cells[partsIdx]) : 0;
+                    let height = heightIdx !== -1 && heightIdx < cells.length ? Math.ceil(parseFloat(cells[heightIdx]) * 2) / 2 : 4;
+                    let lf = lfIdx !== -1 && lfIdx < cells.length ? parseFloat(cells[lfIdx]) : 0;
+                    let rips = ripsIdx !== -1 && ripsIdx < cells.length ? parseFloat(cells[ripsIdx]) : 0;
+                    
+                    let oId = "";
+                    if (orderIdx !== -1 && orderIdx < cells.length && cells[orderIdx]) {
+                        oId = cells[orderIdx].replace(/[^0-9]/g, '');
+                        if (oId && !orderIds.includes(oId)) {
+                            orderIds.push(oId);
+                        }
+                    }
+
+                    if (parts > 0 || lf > 0 || rips > 0) {
+                        material = material.trim();
+                        
+                        parsedItems.push({
+                            qty: Math.max(1, Math.ceil(parts / 4)),
+                            width: 0,
+                            depth: 0,
+                            height: height,
+                            topEdge: topEdge || "Clear Foil Bullnose",
+                            material: material || "PF: 12MM Baltic Birch Ply",
+                            parts: parts,
+                            lf: lf,
+                            rips: rips,
+                            preCalculated: true,
+                            orderId: oId
+                        });
+                    }
+                }
+                return { items: parsedItems, orderIds: orderIds };
+            }
+
+            // Adaptive fallback if header-based detection fails for key columns
+            if (qtyIdx === -1 || widthIdx === -1 || depthIdx === -1 || heightIdx === -1) {
+                let colNumericStats = {};
+                let sampleRowsCount = 0;
+
+                for (let i = 1; i < Math.min(lines.length, 6); i++) {
+                    if (!lines[i].trim()) continue;
+                    let cells = parseCSVLine(lines[i]);
+                    sampleRowsCount++;
+                    cells.forEach((cell, idx) => {
+                        let parsed = parseFraction(cell);
+                        if (!isNaN(parsed) && parsed > 0) {
+                            colNumericStats[idx] = (colNumericStats[idx] || 0) + 1;
+                        }
+                    });
+                }
+
+                let detectedNumCols = [];
+                for (let idx in colNumericStats) {
+                    if (colNumericStats[idx] === sampleRowsCount) {
+                        detectedNumCols.push(parseInt(idx));
+                    }
+                }
+                detectedNumCols.sort((a, b) => a - b);
+
+                if (detectedNumCols.length >= 4) {
+                    if (detectedNumCols.length >= 5) {
+                        if (qtyIdx === -1) qtyIdx = detectedNumCols[1];
+                        if (widthIdx === -1) widthIdx = detectedNumCols[2];
+                        if (depthIdx === -1) depthIdx = detectedNumCols[3];
+                        if (heightIdx === -1) heightIdx = detectedNumCols[4];
+                    } else {
+                        if (qtyIdx === -1) qtyIdx = detectedNumCols[0];
+                        if (widthIdx === -1) widthIdx = detectedNumCols[1];
+                        if (depthIdx === -1) depthIdx = detectedNumCols[2];
+                        if (heightIdx === -1) heightIdx = detectedNumCols[3];
+                    }
+                } else if (detectedNumCols.length === 3) {
+                    if (widthIdx === -1) widthIdx = detectedNumCols[0];
+                    if (depthIdx === -1) depthIdx = detectedNumCols[1];
+                    if (heightIdx === -1) heightIdx = detectedNumCols[2];
+                }
+            }
+
+            // Fallbacks
+            if (qtyIdx === -1) qtyIdx = 1;
+            if (widthIdx === -1) widthIdx = 2;
+            if (depthIdx === -1) depthIdx = 3;
+            if (heightIdx === -1) heightIdx = 4;
+
+            let parsedItems = [];
+            let orderIds = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                let cells = parseCSVLine(lines[i]);
+                
+                let qty = qtyIdx !== -1 && qtyIdx < cells.length ? parseInt(cells[qtyIdx]) : 1;
+                let width = widthIdx !== -1 && widthIdx < cells.length ? parseFraction(cells[widthIdx]) : 0;
+                let depth = depthIdx !== -1 && depthIdx < cells.length ? parseFloat(cells[depthIdx]) : 0;
+                let height = heightIdx !== -1 && heightIdx < cells.length ? Math.ceil(parseFloat(cells[heightIdx]) * 2) / 2 : 0;
+                let material = matIdx !== -1 && matIdx < cells.length ? cells[matIdx] : "PF: 12MM Baltic Birch Ply";
+                let topEdge = edgeIdx !== -1 && edgeIdx < cells.length ? cells[edgeIdx] : "Clear Foil Bullnose";
+                
+                let oId = "";
+                if (orderIdx !== -1 && orderIdx < cells.length && cells[orderIdx]) {
+                    oId = cells[orderIdx].replace(/[^0-9]/g, '');
+                    if (oId && !orderIds.includes(oId)) {
+                        orderIds.push(oId);
+                    }
+                }
+
+                if (qty > 0 && width > 0 && depth > 0 && height > 0) {
+                    material = material.trim();
+                    
+                    parsedItems.push({
+                        qty,
+                        width,
+                        depth,
+                        height,
+                        topEdge: topEdge || "Clear Foil Bullnose",
+                        material: material || "PF: 12MM Baltic Birch Ply",
+                        orderId: oId
+                    });
+                }
+            }
+            
+            return { items: parsedItems, orderIds: orderIds };
+        }
+
+
+
+        // Material Categorization logic matching Kovas' warehouse divisions
+        function getMaterialCategory(material, topEdge) {
+            let matLower = material.toLowerCase().trim();
+            let edgeLower = topEdge.toLowerCase().trim();
+            
+            // 1. FAA always goes to FAA SIDES
+            if (matLower.startsWith('faa') || matLower.includes('faa:')) {
+                return 'FAA SIDES';
+            }
+            
+            // 2. MDF / PBC / or anything with pvc/tape edges goes to MDF/PBC/PVC
+            if (matLower.startsWith('mdf') || matLower.startsWith('pbc') || matLower.includes('melamine') || matLower.includes('particle') || edgeLower.includes('pvc') || edgeLower.includes('tape')) {
+                return 'MDF / PBC / PVC & TAPE SIDES';
+            }
+            
+            // 3. Plywood (contains 'ply' or 'birch')
+            if (matLower.includes('ply') || matLower.includes('birch')) {
+                return 'PLYWOOD SIDES';
+            }
+            
+            // 4. Solid Wood (starts with UF: or PF: or contains solid wood species)
+            if (matLower.startsWith('uf') || matLower.startsWith('pf') || matLower.includes('solid') || matLower.includes('alder') || matLower.includes('mahogany') || matLower.includes('cedar') || matLower.includes('beech') || matLower.includes('maple') || matLower.includes('oak') || matLower.includes('cherry') || matLower.includes('walnut') || matLower.includes('fir')) {
+                return 'SOLID SIDES';
+            }
+            
+            return 'MDF / PBC / PVC & TAPE SIDES'; // Default fallback
+        }
+
+        let computedGroups = [];
+
+        function calculateReport() {
+            let reportCard = document.getElementById('report-card');
+            
+            if (items.length === 0) {
+                reportCard.style.display = 'none';
+                return;
+            }
+
+            // Grouping structure
+            let groupedCategories = {
+                'PLYWOOD SIDES': [],
+                'FAA SIDES': [],
+                'SOLID SIDES': [],
+                'MDF / PBC / PVC & TAPE SIDES': []
+            };
+
+            let rawGroups = {};
+
+            items.forEach(item => {
+                let key = `${item.topEdge}|${item.material}|${item.height}`;
+                if (!rawGroups[key]) {
+                    rawGroups[key] = {
+                        topEdge: item.topEdge,
+                        material: item.material,
+                        height: item.height,
+                        boxes: 0,
+                        totalInches: 0,
+                        preCalculatedLF: 0,
+                        preCalculatedRips: 0,
+                        hasPreCalculated: false,
+                        orderIds: []
+                    };
+                }
+
+                if (item.orderId && !rawGroups[key].orderIds.includes(item.orderId)) {
+                    rawGroups[key].orderIds.push(item.orderId);
+                }
+
+                if (item.preCalculated) {
+                    rawGroups[key].boxes += item.qty;
+                    rawGroups[key].preCalculatedLF += item.lf;
+                    rawGroups[key].preCalculatedRips += item.rips;
+                    rawGroups[key].hasPreCalculated = true;
+                } else {
+                    let perimeter = (2 * item.depth) + (2 * item.width);
+                    rawGroups[key].boxes += item.qty;
+                    rawGroups[key].totalInches += perimeter * item.qty;
+                }
+            });
+
+            computedGroups = [];
+            
+            // Categorize groups
+            for (let k in rawGroups) {
+                let g = rawGroups[k];
+                let cat = getMaterialCategory(g.material, g.topEdge);
+                
+                let lf = g.hasPreCalculated ? g.preCalculatedLF : (g.totalInches / 12);
+                
+                let isBalticBirch = g.material.toLowerCase().includes('birch') && !g.material.toLowerCase().includes('faa');
+                let ripSize = isBalticBirch ? 60.0 : 96.5;
+                let ripLabel = isBalticBirch ? '60" (5x5)' : '96.5"';
+                let rips = g.hasPreCalculated ? g.preCalculatedRips : (g.totalInches / ripSize);
+
+                let lfRound = Math.ceil(lf);
+                let ripsRound = Math.ceil(rips);
+                let parts = g.hasPreCalculated ? g.boxes * 4 : g.boxes * 4; // wait, parts is always boxes * 4
+
+                let groupObj = {
+                    topEdge: g.topEdge,
+                    material: g.material,
+                    height: g.height,
+                    boxes: g.boxes,
+                    parts: parts,
+                    lf: lfRound,
+                    rips: ripsRound,
+                    ripSize: ripLabel,
+                    category: cat,
+                    orderIds: g.orderIds
+                };
+                
+                groupedCategories[cat].push(groupObj);
+                computedGroups.push(groupObj);
+            }
+
+            // Render separated tables
+            let container = document.getElementById('tables-container');
+            container.innerHTML = '';
+            
+            let grandBoxes = 0;
+            let grandParts = 0;
+            let grandLF = 0;
+            let grandRips = 0;
+
+            for (let catName in groupedCategories) {
+                let list = groupedCategories[catName];
+                if (list.length === 0) continue;
+
+                // Sort list by top edge, then material name, then height
+                list.sort((a, b) => {
+                    let edgeA = a.topEdge.toLowerCase();
+                    let edgeB = b.topEdge.toLowerCase();
+                    if (edgeA < edgeB) return -1;
+                    if (edgeA > edgeB) return 1;
+                    
+                    let matA = a.material.toLowerCase();
+                    let matB = b.material.toLowerCase();
+                    if (matA < matB) return -1;
+                    if (matA > matB) return 1;
+                    
+                    return a.height - b.height;
+                });
+
+                let groupWrapper = document.createElement('div');
+                groupWrapper.className = 'category-print-group';
+
+                // Add print-only header for each sheet
+                let printHeader = document.createElement('div');
+                printHeader.className = 'print-header';
+                
+                let now = new Date();
+                let month = String(now.getMonth() + 1).padStart(2, '0');
+                let day = String(now.getDate()).padStart(2, '0');
+                let year = now.getFullYear();
+                let hours = now.getHours();
+                let minutes = String(now.getMinutes()).padStart(2, '0');
+                let ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                let hoursStr = String(hours).padStart(2, '0');
+                let formattedTime = `${month}/${day}/${year} ${hoursStr}:${minutes} ${ampm}`;
+
+                let categoryOrderIds = [];
+                list.forEach(g => {
+                    if (g.orderIds) {
+                        g.orderIds.forEach(id => {
+                            if (id && !categoryOrderIds.includes(id)) {
+                                categoryOrderIds.push(id);
+                            }
+                        });
+                    }
+                });
+                categoryOrderIds.sort();
+                printHeader.innerHTML = `
+                    <span class="print-title">Top Edge Report</span>
+                    <span class="print-timestamp">${formattedTime}</span>
+                `;
+                groupWrapper.appendChild(printHeader);
+
+                let header = document.createElement('div');
+                header.className = 'report-category-header';
+                let subtext = categoryOrderIds.length > 0 ? ` (Orders: ${categoryOrderIds.join(', ')})` : '';
+                header.innerText = catName + subtext;
+                groupWrapper.appendChild(header);
+
+                let div = document.createElement('div');
+                div.className = 'grid-container';
+                
+                let html = `
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Top Edge</th>
+                                <th style="width: 26%;">Material</th>
+                                <th style="text-align: center; width: 10%;">Drawer Boxes</th>
+                                <th style="text-align: center; width: 8%;">Parts</th>
+                                <th style="text-align: center; width: 8%;">Height</th>
+                                <th style="text-align: center; width: 8%;">LF</th>
+                                <th style="text-align: center; width: 10%;">Rips</th>
+                                <th style="text-align: center; width: 8%;">Rip Size</th>
+                                <th style="text-align: center; width: 2%;">Done</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                let catBoxes = 0;
+                let catParts = 0;
+                let catLF = 0;
+                let catRips = 0;
+                let catSheetsSum = 0;
+
+                list.forEach(g => {
+                    catBoxes += g.boxes;
+                    catParts += g.parts;
+                    catLF += g.lf;
+                    catRips += g.rips;
+
+                    // Calculate sheets needed for Plywood sides
+                    if (catName === 'PLYWOOD SIDES') {
+                        let isBalticBirch = g.material.toLowerCase().includes('birch') && !g.material.toLowerCase().includes('faa');
+                        let sheetWidth = isBalticBirch ? 60.0 : 48.0;
+                        let trim = 0.188;
+                        let kerf = 0.1875; // 3/16"
+                        let usableWidth = sheetWidth - (2 * trim);
+                        let ripsPerSheet = Math.floor((usableWidth + kerf) / (g.height + kerf));
+                        if (ripsPerSheet > 0) {
+                            catSheetsSum += (g.rips / ripsPerSheet);
+                        }
+                    }
+
+                    let badgeClass = 'badge-mdf';
+                    if (catName === 'PLYWOOD SIDES') badgeClass = 'badge-birch';
+                    if (catName === 'SOLID SIDES') badgeClass = 'badge-maple';
+                    if (catName === 'FAA SIDES') badgeClass = 'badge-faa';
+
+                    let isHighlighted = g.height >= 13;
+                    let rowClass = isHighlighted ? ' class="highlight-row"' : '';
+                    let displayHeight = isHighlighted ? `⚠️ ${g.height}"` : `${g.height}"`;
+
+                    html += `
+                        <tr${rowClass}>
+                            <td><b>${g.topEdge}</b></td>
+                            <td><span class="badge ${badgeClass}">${g.material}</span></td>
+                            <td style="text-align: center;">${g.boxes}</td>
+                            <td style="text-align: center;">${g.parts}</td>
+                            <td style="text-align: center;">${displayHeight}</td>
+                            <td style="text-align: center; font-weight: bold;">${g.lf}</td>
+                            <td style="text-align: center; font-weight: bold; color: #0284c7;">${g.rips}</td>
+                            <td style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${g.ripSize}</td>
+                            <td style="text-align: center;"><input type="checkbox" style="width: 16px; height: 16px; cursor: pointer;"></td>
+                        </tr>
+                    `;
+                });
+
+                grandBoxes += catBoxes;
+                grandParts += catParts;
+                grandLF += catLF;
+                grandRips += catRips;
+
+                // Add Category Total Row
+                let ripsDisplay = catRips;
+                if (catName === 'PLYWOOD SIDES' && catSheetsSum > 0) {
+                    let roundedSheets = Math.ceil(catSheetsSum);
+                    ripsDisplay = `${catRips} <span style="font-size: 0.85rem; font-weight: normal; color: #475569;">(${roundedSheets} Sheet${roundedSheets > 1 ? 's' : ''})</span>`;
+                }
+
+                html += `
+                    <tr class="total-row">
+                        <td colspan="2">${catName === 'PLYWOOD SIDES' ? 'TOTAL' : `TOTAL ${catName}`}</td>
+                        <td style="text-align: center;">${catBoxes}</td>
+                        <td style="text-align: center;">${catParts}</td>
+                        <td></td>
+                        <td style="text-align: center;">${catLF}</td>
+                        <td style="text-align: center; color: #0284c7;">${ripsDisplay}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                `;
+
+                html += '</tbody></table>';
+                div.innerHTML = html;
+                groupWrapper.appendChild(div);
+                container.appendChild(groupWrapper);
+            }
+
+
+
+            // Active Order note updates
+            let notesInput = document.getElementById('order-notes').value.trim();
+            let notesDisplay = document.getElementById('batch-notes-display');
+            if (notesInput) {
+                notesDisplay.innerHTML = `📝 <b>Orders Included in Batch:</b> <code>${notesInput}</code>`;
+                notesDisplay.style.display = 'block';
+            } else {
+                notesDisplay.style.display = 'none';
+            }
+
+            reportCard.style.display = 'block';
+        }
+
+        function exportCSV() {
+            if (computedGroups.length === 0) return;
+
+            let csvRows = [];
+            let notesInput = document.getElementById('order-notes').value.trim();
+            
+            if (notesInput) {
+                csvRows.push(`"Orders Included in Batch: ${notesInput}"`);
+                csvRows.push('');
+            }
+            
+            csvRows.push(['Category', 'Top Edge', 'Material', 'Boxes', 'Parts', 'Height', 'LF (Rounded)', 'Rips (Rounded)', 'Rip Size'].map(x => `"${x}"`).join(','));
+
+            computedGroups.forEach(g => {
+                csvRows.push([
+                    g.category,
+                    g.topEdge,
+                    g.material,
+                    g.boxes,
+                    g.parts,
+                    g.height,
+                    g.lf,
+                    g.rips,
+                    g.ripSize
+                ].map(x => `"${x}"`).join(','));
+            });
+
+            let grandBoxes = computedGroups.reduce((a, b) => a + b.boxes, 0);
+            let grandParts = computedGroups.reduce((a, b) => a + b.parts, 0);
+            let grandLF = computedGroups.reduce((a, b) => a + b.lf, 0);
+            let grandRips = computedGroups.reduce((a, b) => a + b.rips, 0);
+            
+            csvRows.push('');
+            csvRows.push([
+                'TOTAL BATCH',
+                '',
+                '',
+                grandBoxes,
+                grandParts,
+                '',
+                grandLF,
+                grandRips,
+                ''
+            ].map(x => `"${x}"`).join(','));
+
+            let csvString = csvRows.join('\n');
+            let blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.setAttribute('download', `top_edge_batch_report_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
