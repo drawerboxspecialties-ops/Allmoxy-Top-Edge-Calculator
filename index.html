@@ -907,7 +907,7 @@
         let activeOrderIds = [];
         let removedOrderIds = [];
         let originalDocumentTitle = document.title;
-        const SAW_SYNC_URL = "http://server24:8787/sync-report";
+        const SAW_SYNC_URL = "http://localhost:8787/sync-report";
 
         function formatTimestamp(date = new Date()) {
             let weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
