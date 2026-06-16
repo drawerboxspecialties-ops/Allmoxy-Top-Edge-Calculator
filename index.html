@@ -419,6 +419,83 @@
             margin-top: 0.35rem;
         }
 
+        .filter-panel {
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            background: #f8fafc;
+            padding: 0.95rem;
+            display: none;
+            gap: 0.75rem;
+            flex-direction: column;
+        }
+
+        .filter-panel-header {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .filter-panel-title {
+            color: #0f172a;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .filter-panel-action-label {
+            color: #ef4444;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .filter-row {
+            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr 42px;
+            gap: 0.45rem;
+        }
+
+        .filter-remove-btn {
+            align-items: center;
+            background: #fee2e2;
+            border: none;
+            border-radius: 8px;
+            color: #dc2626;
+            cursor: pointer;
+            display: inline-flex;
+            font-size: 1.2rem;
+            font-weight: 900;
+            height: 38px;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .filter-remove-btn:hover {
+            background: #fecaca;
+            transform: translateY(-1px);
+        }
+
+        .include-removed-row {
+            align-items: flex-start;
+            border-top: 1px solid #cbd5e1;
+            color: #334155;
+            display: flex;
+            gap: 0.55rem;
+            font-size: 0.9rem;
+            line-height: 1.35;
+            padding-top: 0.75rem;
+        }
+
+        .removed-filter-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
         .order-dropdown {
             position: relative;
             width: 100%;
@@ -927,6 +1004,33 @@
                     <div class="order-help">Select removed orders here if they need to be added back.</div>
                 </div>
             </div>
+
+            <div id="filter-panel" class="filter-panel" aria-live="polite">
+                <div class="filter-panel-header">
+                    <div class="filter-panel-title">Filter Out Rows</div>
+                    <div class="filter-panel-action-label">Remove</div>
+                </div>
+                <div class="filter-row">
+                    <input type="text" id="filter-order-input" placeholder="Order #..." list="filter-order-options">
+                    <button type="button" class="filter-remove-btn" id="btn-filter-order" title="Remove order">-</button>
+                </div>
+                <div class="filter-row">
+                    <input type="text" id="filter-material-input" placeholder="Material..." list="filter-material-options">
+                    <button type="button" class="filter-remove-btn" id="btn-filter-material" title="Remove material">-</button>
+                </div>
+                <div class="filter-row">
+                    <input type="text" id="filter-top-edge-input" placeholder="Top Edge..." list="filter-top-edge-options">
+                    <button type="button" class="filter-remove-btn" id="btn-filter-top-edge" title="Remove top edge">-</button>
+                </div>
+                <datalist id="filter-order-options"></datalist>
+                <datalist id="filter-material-options"></datalist>
+                <datalist id="filter-top-edge-options"></datalist>
+                <label class="include-removed-row">
+                    <input type="checkbox" id="chk-include-removed-export">
+                    <span>Add removed rows back to CSV export</span>
+                </label>
+                <div id="removed-filter-list" class="removed-filter-list"></div>
+            </div>
         </div>
 
         <!-- Live Computed Report Output Card -->
@@ -955,6 +1059,8 @@
         let computedGroups = [];
         let activeOrderIds = [];
         let removedOrderIds = [];
+        let removedMaterials = [];
+        let removedTopEdges = [];
         let originalDocumentTitle = document.title;
         const SAW_SYNC_URL = "http://localhost:8787/sync-report";
 
@@ -980,6 +1086,10 @@
                 '"': '&quot;',
                 "'": '&#39;'
             }[char]));
+        }
+
+        function escapeAttr(value) {
+            return escapeHTML(value);
         }
 
         function escapeCSV(value) {
@@ -1038,11 +1148,102 @@
             }
             syncOrderNotes();
             renderOrderManager();
+            renderFilterPanel();
             calculateReport();
         }
 
         function getSelectedCheckedValues(containerId) {
             return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`)).map(input => input.value);
+        }
+
+        function normalizeFilterValue(value) {
+            return String(value ?? '').trim().toLowerCase();
+        }
+
+        function sortTextList(values) {
+            return values.sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }));
+        }
+
+        function uniqueItemValues(fieldName) {
+            return sortTextList([...new Set(items.map(item => item[fieldName]).filter(Boolean))]);
+        }
+
+        function findMatchingValue(inputValue, candidates) {
+            let cleaned = String(inputValue ?? '').trim();
+            if (!cleaned) return '';
+            return candidates.find(value => normalizeFilterValue(value) === normalizeFilterValue(cleaned)) || cleaned;
+        }
+
+        function updateDatalist(id, values) {
+            document.getElementById(id).innerHTML = values
+                .map(value => `<option value="${escapeAttr(value)}"></option>`)
+                .join('');
+        }
+
+        function removeOrderFromFilter() {
+            let input = document.getElementById('filter-order-input');
+            let orderId = findMatchingValue(input.value, activeOrderIds);
+            if (!orderId) {
+                setStatus('Enter an order number to remove.', true);
+                return;
+            }
+
+            if (!activeOrderIds.includes(orderId) && !removedOrderIds.includes(orderId)) {
+                setStatus(`Order ${orderId} was not found in the imported rows.`, true);
+                return;
+            }
+
+            removeOrder(orderId);
+            input.value = '';
+            setStatus(`Removed order ${orderId} from the report.`);
+        }
+
+        function removeMaterialFromFilter() {
+            let input = document.getElementById('filter-material-input');
+            let material = findMatchingValue(input.value, uniqueItemValues('material'));
+            if (!material) {
+                setStatus('Enter a material to remove.', true);
+                return;
+            }
+
+            if (!uniqueItemValues('material').some(value => normalizeFilterValue(value) === normalizeFilterValue(material))) {
+                setStatus(`Material ${material} was not found in the imported rows.`, true);
+                return;
+            }
+
+            if (!removedMaterials.some(value => normalizeFilterValue(value) === normalizeFilterValue(material))) {
+                removedMaterials.push(material);
+                removedMaterials = sortTextList(removedMaterials);
+            }
+
+            input.value = '';
+            renderFilterPanel();
+            calculateReport();
+            setStatus(`Removed material ${material} from the report.`);
+        }
+
+        function removeTopEdgeFromFilter() {
+            let input = document.getElementById('filter-top-edge-input');
+            let topEdge = findMatchingValue(input.value, uniqueItemValues('topEdge'));
+            if (!topEdge) {
+                setStatus('Enter a top edge to remove.', true);
+                return;
+            }
+
+            if (!uniqueItemValues('topEdge').some(value => normalizeFilterValue(value) === normalizeFilterValue(topEdge))) {
+                setStatus(`Top edge ${topEdge} was not found in the imported rows.`, true);
+                return;
+            }
+
+            if (!removedTopEdges.some(value => normalizeFilterValue(value) === normalizeFilterValue(topEdge))) {
+                removedTopEdges.push(topEdge);
+                removedTopEdges = sortTextList(removedTopEdges);
+            }
+
+            input.value = '';
+            renderFilterPanel();
+            calculateReport();
+            setStatus(`Removed top edge ${topEdge} from the report.`);
         }
 
         function removeSelectedOrders() {
@@ -1061,6 +1262,7 @@
             removedOrderIds.sort();
             syncOrderNotes();
             renderOrderManager();
+            renderFilterPanel();
             calculateReport();
             setStatus(`Removed ${selectedOrders.length} order${selectedOrders.length === 1 ? '' : 's'} from the report.`);
         }
@@ -1081,6 +1283,7 @@
             activeOrderIds.sort();
             syncOrderNotes();
             renderOrderManager();
+            renderFilterPanel();
             calculateReport();
             setStatus(`Restored ${selectedOrders.length} order${selectedOrders.length === 1 ? '' : 's'} to the report.`);
         }
@@ -1093,6 +1296,7 @@
             }
             syncOrderNotes();
             renderOrderManager();
+            renderFilterPanel();
             calculateReport();
         }
 
@@ -1130,11 +1334,71 @@
             `).join('');
         }
 
+        function restoreFilterValue(type, value) {
+            if (type === 'order') {
+                restoreOrder(value);
+                setStatus(`Restored order ${value} to the report.`);
+                return;
+            }
+
+            if (type === 'material') {
+                removedMaterials = removedMaterials.filter(item => normalizeFilterValue(item) !== normalizeFilterValue(value));
+                setStatus(`Restored material ${value} to the report.`);
+            }
+
+            if (type === 'topEdge') {
+                removedTopEdges = removedTopEdges.filter(item => normalizeFilterValue(item) !== normalizeFilterValue(value));
+                setStatus(`Restored top edge ${value} to the report.`);
+            }
+
+            renderFilterPanel();
+            calculateReport();
+        }
+
+        function renderFilterPanel() {
+            let panel = document.getElementById('filter-panel');
+            if (!panel) return;
+
+            if (items.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+
+            panel.style.display = 'flex';
+
+            let removedMaterialKeys = removedMaterials.map(normalizeFilterValue);
+            let removedTopEdgeKeys = removedTopEdges.map(normalizeFilterValue);
+            updateDatalist('filter-order-options', activeOrderIds);
+            updateDatalist('filter-material-options', uniqueItemValues('material').filter(value => !removedMaterialKeys.includes(normalizeFilterValue(value))));
+            updateDatalist('filter-top-edge-options', uniqueItemValues('topEdge').filter(value => !removedTopEdgeKeys.includes(normalizeFilterValue(value))));
+
+            let badges = [
+                ...removedOrderIds.map(value => ({ type: 'order', label: `Order ${value}`, value })),
+                ...removedMaterials.map(value => ({ type: 'material', label: `Material ${value}`, value })),
+                ...removedTopEdges.map(value => ({ type: 'topEdge', label: `Top Edge ${value}`, value }))
+            ];
+
+            document.getElementById('removed-filter-list').innerHTML = badges.length
+                ? badges.map(badge => `
+                    <button type="button" class="btn btn-secondary" data-filter-type="${escapeAttr(badge.type)}" data-filter-value="${escapeAttr(badge.value)}" title="Restore ${escapeAttr(badge.label)}">
+                        ${escapeHTML(badge.label)} ×
+                    </button>
+                `).join('')
+                : '<span class="order-help">No rows are currently removed.</span>';
+        }
+
         function getActiveItems() {
-            if (activeOrderIds.length === 0 && removedOrderIds.length === 0) {
+            if (activeOrderIds.length === 0 && removedOrderIds.length === 0 && removedMaterials.length === 0 && removedTopEdges.length === 0) {
                 return items;
             }
-            return items.filter(item => !item.orderId || activeOrderIds.includes(item.orderId));
+            let removedMaterialKeys = removedMaterials.map(normalizeFilterValue);
+            let removedTopEdgeKeys = removedTopEdges.map(normalizeFilterValue);
+            return items.filter(item => {
+                let orderAllowed = !item.orderId || activeOrderIds.includes(item.orderId);
+                let materialAllowed = !removedMaterialKeys.includes(normalizeFilterValue(item.material));
+                let topEdgeAllowed = !removedTopEdgeKeys.includes(normalizeFilterValue(item.topEdge));
+                return orderAllowed && materialAllowed && topEdgeAllowed;
+            });
         }
 
         function getCategoryDisplayName(category) {
@@ -1298,6 +1562,14 @@
             document.getElementById('btn-sync-saw').addEventListener('click', syncReportToSaw);
             document.getElementById('btn-remove-selected-orders').addEventListener('click', removeSelectedOrders);
             document.getElementById('btn-restore-selected-orders').addEventListener('click', restoreSelectedOrders);
+            document.getElementById('btn-filter-order').addEventListener('click', removeOrderFromFilter);
+            document.getElementById('btn-filter-material').addEventListener('click', removeMaterialFromFilter);
+            document.getElementById('btn-filter-top-edge').addEventListener('click', removeTopEdgeFromFilter);
+            document.getElementById('removed-filter-list').addEventListener('click', event => {
+                let button = event.target.closest('button[data-filter-type]');
+                if (!button) return;
+                restoreFilterValue(button.dataset.filterType, button.dataset.filterValue);
+            });
             setupCsvDropZone();
             
             // Watch Involved Orders input changes to trigger Live Preview updates
@@ -1313,8 +1585,12 @@
                 computedGroups = [];
                 activeOrderIds = [];
                 removedOrderIds = [];
+                removedMaterials = [];
+                removedTopEdges = [];
                 document.getElementById('order-notes').value = '';
+                document.getElementById('chk-include-removed-export').checked = false;
                 renderOrderManager();
+                renderFilterPanel();
                 setStatus('');
                 calculateReport();
             }
@@ -1380,6 +1656,8 @@
                         syncOrderNotes();
                         renderOrderManager();
                     }
+
+                    renderFilterPanel();
                     
                     calculateReport();
 
@@ -1673,17 +1951,7 @@
             return 'MDF / PBC / PVC & TAPE SIDES'; // Default fallback
         }
 
-        function calculateReport() {
-            let reportCard = document.getElementById('report-card');
-            let reportItems = getActiveItems();
-            
-            if (items.length === 0 || reportItems.length === 0) {
-                reportCard.style.display = 'none';
-                computedGroups = [];
-                return;
-            }
-
-            // Grouping structure
+        function buildReportData(reportItems) {
             let groupedCategories = {
                 'PLYWOOD SIDES': [],
                 'FAA SIDES': [],
@@ -1728,7 +1996,7 @@
                 }
             });
 
-            computedGroups = [];
+            let groups = [];
             
             // Categorize groups
             for (let k in rawGroups) {
@@ -1761,8 +2029,25 @@
                 };
                 
                 groupedCategories[cat].push(groupObj);
-                computedGroups.push(groupObj);
+                groups.push(groupObj);
             }
+
+            return { groupedCategories, groups };
+        }
+
+        function calculateReport() {
+            let reportCard = document.getElementById('report-card');
+            let reportItems = getActiveItems();
+            
+            if (items.length === 0 || reportItems.length === 0) {
+                reportCard.style.display = 'none';
+                computedGroups = [];
+                return;
+            }
+
+            let reportData = buildReportData(reportItems);
+            let groupedCategories = reportData.groupedCategories;
+            computedGroups = reportData.groups;
 
             // Render separated tables
             let container = document.getElementById('tables-container');
@@ -2142,7 +2427,9 @@
         }
 
         function exportCSV() {
-            if (computedGroups.length === 0) return;
+            let includeRemoved = document.getElementById('chk-include-removed-export')?.checked;
+            let exportGroups = includeRemoved ? buildReportData(items).groups : computedGroups;
+            if (exportGroups.length === 0) return;
 
             let csvRows = [];
             let notesInput = document.getElementById('order-notes').value.trim();
@@ -2151,10 +2438,15 @@
                 csvRows.push(escapeCSV(`Orders Included in Batch: ${notesInput}`));
                 csvRows.push('');
             }
+
+            if (includeRemoved) {
+                csvRows.push(escapeCSV('Export includes rows removed from the live report.'));
+                csvRows.push('');
+            }
             
             csvRows.push(['Category', 'Top Edge', 'Material', 'Boxes', 'Parts', 'Height', 'LF (Rounded)', 'Rips (Rounded)', 'Rip Size'].map(escapeCSV).join(','));
 
-            computedGroups.forEach(g => {
+            exportGroups.forEach(g => {
                 csvRows.push([
                     getCategoryDisplayName(g.category),
                     g.topEdge,
@@ -2168,10 +2460,10 @@
                 ].map(escapeCSV).join(','));
             });
 
-            let grandBoxes = computedGroups.reduce((a, b) => a + b.boxes, 0);
-            let grandParts = computedGroups.reduce((a, b) => a + b.parts, 0);
-            let grandLF = computedGroups.reduce((a, b) => a + b.lf, 0);
-            let grandRips = computedGroups.reduce((a, b) => a + b.rips, 0);
+            let grandBoxes = exportGroups.reduce((a, b) => a + b.boxes, 0);
+            let grandParts = exportGroups.reduce((a, b) => a + b.parts, 0);
+            let grandLF = exportGroups.reduce((a, b) => a + b.lf, 0);
+            let grandRips = exportGroups.reduce((a, b) => a + b.rips, 0);
             
             csvRows.push('');
             csvRows.push([
