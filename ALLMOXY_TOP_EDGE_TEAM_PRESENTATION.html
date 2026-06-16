@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allmoxy Top Edge Report - Team Presentation</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            color: #0f172a;
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        .deck {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .slide {
+            min-height: 560px;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            margin-bottom: 28px;
+            padding: 48px;
+            page-break-after: always;
+        }
+
+        h1 {
+            font-size: 46px;
+            margin: 0 0 16px;
+            color: #0f172a;
+        }
+
+        h2 {
+            font-size: 34px;
+            margin: 0 0 24px;
+            color: #1e40af;
+        }
+
+        p, li {
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #475569;
+            font-size: 26px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 999px;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 8px 14px;
+            margin: 6px 8px 6px 0;
+        }
+
+        .example {
+            background: #f8fafc;
+            border-left: 6px solid #2563eb;
+            border-radius: 10px;
+            padding: 18px 22px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+            }
+
+            .deck {
+                max-width: none;
+                padding: 0;
+            }
+
+            .slide {
+                box-shadow: none;
+                border-radius: 0;
+                min-height: 90vh;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="deck">
+        <section class="slide">
+            <h1>Allmoxy Top Edge Report</h1>
+            <p class="subtitle">Shop-floor reporting, order control, and cut optimization for DBS Drawers.</p>
+        </section>
+
+        <section class="slide">
+            <h2>What Was Built</h2>
+            <ul>
+                <li>Offline HTML calculator for Allmoxy CSV exports.</li>
+                <li>Drag and drop CSV import.</li>
+                <li>Grouped print reports by department.</li>
+                <li>Order remove and restore controls.</li>
+                <li>CSV export and print-ready output.</li>
+                <li>Compact cut optimization for non-solid materials.</li>
+                <li>Sync Report to Saw button for dashboard delivery.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Why It Helps</h2>
+            <ul>
+                <li>Less manual sorting by the operator.</li>
+                <li>Clearer department labels.</li>
+                <li>More accurate parts-to-boxes totals.</li>
+                <li>Better visibility into sheet quantity and waste.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Order Management</h2>
+            <ul>
+                <li>Active orders can be removed with multi-select dropdowns.</li>
+                <li>Removed orders can be restored later.</li>
+                <li>The report recalculates using only active orders.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Report Labels</h2>
+            <p>Visible categories were simplified:</p>
+            <span class="tag">Plywood</span>
+            <span class="tag">Solid</span>
+            <span class="tag">FAA</span>
+            <span class="tag">MDF / PBC</span>
+            <p>PVC and wood tape remain top-edge values, not category labels.</p>
+        </section>
+
+        <section class="slide">
+            <h2>Calculation Fixes</h2>
+            <ul>
+                <li>Inch marks in material names now parse correctly.</li>
+                <li>Maple materials are no longer skipped.</li>
+                <li>Parts are summed before converting to boxes.</li>
+                <li>Box totals no longer inflate from row-by-row rounding.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Cut Optimization Rules</h2>
+            <ul>
+                <li>Rips run in the sheet length direction.</li>
+                <li>Rip heights are packed across sheet width.</li>
+                <li>Trim is 0.25" on both sides of width.</li>
+                <li>Kerf is 0.188".</li>
+                <li>Solid and FAA material are excluded.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>How Operators Read It</h2>
+            <div class="example">
+                3 sheets<br>
+                10" - 5 rips<br>
+                4.5" - 1 rip<br>
+                Waste 4.06"
+            </div>
+            <p>Cut 3 sheets using the same listed rip layout.</p>
+            <p>Rips totals also show optimized sheet count, for example: <strong>112 (14 Sheets)</strong>.</p>
+        </section>
+
+        <section class="slide">
+            <h2>Print Improvements</h2>
+            <ul>
+                <li>Professional report heading.</li>
+                <li>Department on each printed page.</li>
+                <li>Weekday, date, and time.</li>
+                <li>Compact cut optimization section.</li>
+                <li>Aligned title, department header, table, and optimization block.</li>
+                <li>Tuned print margins for better top and bottom spacing.</li>
+                <li>Extra top spacing after page one for repeated headers.</li>
+                <li>Balanced print columns so the Done column stays inside the report.</li>
+                <li>Cut optimization prints directly after its matching rip table when space allows.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Validation Results</h2>
+            <ul>
+                <li>157 rows imported from the Thursday CSV.</li>
+                <li>0 rows skipped.</li>
+                <li>16 orders found.</li>
+                <li>3 materials found.</li>
+                <li>40 report groups generated.</li>
+                <li>1254 total parts, 314 boxes, and 349 rips verified.</li>
+                <li>2206 LF and 20 synced optimized sheets verified.</li>
+                <li>Order remove/restore, cut optimization, and saw sync payload verified.</li>
+                <li>Drag/drop CSV import and FAA/Solid optimization exclusions added.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Saw Sync</h2>
+            <ul>
+                <li>The calculator sends reports to http://server24:8787/sync-report.</li>
+                <li>The helper saves reports into the shared server22 saw folder.</li>
+                <li>The saw operator opens one dashboard link from the shared folder.</li>
+                <li>This removes manual floor paperwork once the helper/dashboard are in place.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Task Scheduler</h2>
+            <ul>
+                <li>Task name: Allmoxy Saw Sync Helper.</li>
+                <li>Program: Python 3.13 executable under CORP\kovas.</li>
+                <li>Arguments: C:\AllmoxySawSync\sync_helper.py.</li>
+                <li>Start in: C:\AllmoxySawSync.</li>
+                <li>Validation: Test-NetConnection localhost -Port 8787.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Next Opportunities</h2>
+            <ul>
+                <li>Editable sheet-size settings.</li>
+                <li>Cut optimization export.</li>
+                <li>Saved shop defaults for trim and kerf.</li>
+                <li>Exact optimization search for even lower waste.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
