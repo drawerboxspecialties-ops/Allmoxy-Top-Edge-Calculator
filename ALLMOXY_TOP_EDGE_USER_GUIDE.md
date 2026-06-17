@@ -36,6 +36,12 @@ PVC, tape, and wood tape are treated as top-edge types and route with the MDF/PB
 
 For every non-solid and non-FAA report section, the tool shows a compact **Cut Optimization** block.
 
+Cut heights shown in the report follow the saw operator rule:
+
+- Round drawer height up to the next whole inch.
+- Add `0.2"` when a top edge is present.
+- Example: `4.25"` with a top edge reports as `5.2"`.
+
 Rules used:
 
 - Rips run in the sheet length direction.
@@ -94,7 +100,7 @@ The calculator includes a **Sync Report to Saw** button.
 
 It sends the active report to:
 
-`http://server24:8787/sync-report`
+`http://localhost:8787/sync-report`
 
 The sync payload includes:
 

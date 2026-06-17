@@ -88,7 +88,7 @@ The tool now shows cut guidance for non-solid materials.
 Rules:
 
 - Rips run lengthwise.
-- Heights are packed across sheet width.
+- Cut heights round to whole inches, add `0.2"` for top edge, then pack across sheet width.
 - Trim is `0.25"` on both sheet-width sides.
 - Kerf is `0.188"`.
 - Solid and FAA materials are skipped.
@@ -162,7 +162,7 @@ The calculator now has a **Sync Report to Saw** button.
 
 It sends the active report to:
 
-`http://server24:8787/sync-report`
+`http://localhost:8787/sync-report`
 
 The helper saves report files into:
 
@@ -205,7 +205,7 @@ Note: Browser headers and footers must be disabled in the browser print dialog i
 - Main tool: `index.html`
 - User guide: `ALLMOXY_TOP_EDGE_USER_GUIDE.md`
 - Development reference: `ALLMOXY_TOP_EDGE_DEVELOPMENT_REFERENCE.md`
-- Backup: `index_backup_YYYY-MM-DD_HHMM.html`
+- Version history: Git commit history
 
 ---
 

@@ -15,6 +15,8 @@ let items = [];
 let computedGroups = [];
 let activeOrderIds = [];
 let removedOrderIds = [];
+let removedMaterials = [];
+let removedTopEdges = [];
 const SAW_SYNC_URL = "http://localhost:8787/sync-report";
 ```
 
@@ -24,6 +26,7 @@ const SAW_SYNC_URL = "http://localhost:8787/sync-report";
 - `processCsvFile(file, fileInput)`: shared file-processing path for file picker and drag/drop imports.
 - `setupCsvDropZone()`: wires drag/drop, click, and keyboard upload behavior.
 - `parseFraction(value)`: parses decimals, fractions, mixed fractions, and inch text.
+- `getCutHeight(height, topEdge)`: rounds drawer height to a whole-inch operator cut height and adds `0.2"` when a top edge is present.
 - `getMaterialCategory(material, topEdge)`: routes groups to departments.
 - `calculateReport()`: filters active orders, groups rows, calculates totals, renders report.
 - `getCutOptimizationGroups(list, catName)`: builds optimization groups for non-solid categories.
@@ -50,6 +53,20 @@ boxes = Math.ceil(parts / 4);
 ```
 
 Do not return to row-by-row box rounding. That inflates totals.
+
+## Cut Height Calculation
+
+Operators cut top-edge rips to whole-number heights, not half-inch increments. Before grouping, the calculator rounds the imported drawer height up to the next whole inch. If the row has any top edge value, it adds `0.2"` for top-edge allowance.
+
+```js
+height = Math.ceil(parsedHeight) + (topEdge ? 0.2 : 0);
+```
+
+Examples:
+
+- `4.25"` with top edge -> `5.2"`
+- `5"` with top edge -> `5.2"`
+- `5.01"` with top edge -> `6.2"`
 
 ## Cut Optimization Detail
 
@@ -153,4 +170,4 @@ After any change:
 8. Confirm drag/drop CSV import works.
 9. Confirm cut optimization starts below its matching rip table in print preview when space allows.
 10. Confirm saw sync payload builds.
-11. Create a timestamped backup.
+11. Confirm the commit is pushed so Git contains the version backup.

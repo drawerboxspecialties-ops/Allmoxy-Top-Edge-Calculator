@@ -4,7 +4,7 @@
 
 Primary file:
 
-`C:\Users\kowsh\OneDrive\Desktop\index.html`
+`C:\Users\kovas\Downloads\AllmoxyTopEdgeCalculator\index.html`
 
 The application is a standalone offline HTML file using vanilla HTML, CSS, and JavaScript. It does not require a server or build step.
 
@@ -56,7 +56,7 @@ The application is a standalone offline HTML file using vanilla HTML, CSS, and J
 
 5. `calculateReport()`
    - Filters rows by active orders.
-   - Groups by top edge, material, and rounded height.
+   - Groups by top edge, material, and operator cut height.
    - Routes groups to department categories.
    - Renders report tables and cut optimization.
 
@@ -88,13 +88,15 @@ The parser treats quote marks inside unquoted fields as normal text. This is req
 
 Without this, rows after that field can become misaligned and skipped.
 
-## Height Rounding
+## Cut Height Rounding
 
-Before grouping, drawer heights are rounded up to the nearest half inch:
+Before grouping, drawer heights are rounded up to the next whole inch. If the row has a top edge, the calculator adds `0.2"` for the operator's top-edge allowance:
 
 ```js
-height = Math.ceil(parseFraction(heightValue) * 2) / 2;
+height = Math.ceil(parseFraction(heightValue)) + (topEdge ? 0.2 : 0);
 ```
+
+If the row has no top edge value, the `0.2"` allowance is not added.
 
 ## Department Routing
 
@@ -262,7 +264,7 @@ The calculator includes a **Sync Report to Saw** button:
 The sync endpoint is:
 
 ```js
-const SAW_SYNC_URL = "http://server24:8787/sync-report";
+const SAW_SYNC_URL = "http://localhost:8787/sync-report";
 ```
 
 Relevant functions:
@@ -305,7 +307,7 @@ Shared saw folder:
 
 Validated against:
 
-`C:\Users\kowsh\Downloads\thursday all-Top Edge Report.csv`
+`C:\Users\kovas\Downloads\thursday all-Top Edge Report.csv`
 
 Results:
 

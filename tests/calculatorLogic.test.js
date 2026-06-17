@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   formatInches,
+  getCutHeight,
   getCutOptimizationGroups,
   getMaterialCategory,
   getOptimizedSheetTotal,
@@ -28,6 +29,13 @@ describe('dimension parsing and formatting', () => {
     expect(formatInches(5)).toBe('5');
     expect(formatInches(5.5)).toBe('5.5');
     expect(formatInches(5.125)).toBe('5.13');
+  });
+
+  it('rounds cut heights to whole inches and adds top edge allowance', () => {
+    expect(getCutHeight(4.25, 'Clear Foil Bullnose')).toBe(5.2);
+    expect(getCutHeight(5, 'PVC Tape')).toBe(5.2);
+    expect(getCutHeight(5.01, 'Wood Tape')).toBe(6.2);
+    expect(getCutHeight(5.01, '')).toBe(6);
   });
 });
 

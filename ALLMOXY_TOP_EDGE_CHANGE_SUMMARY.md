@@ -2,7 +2,7 @@
 
 ## Current Tool
 
-`C:\Users\kowsh\OneDrive\Desktop\index.html`
+`C:\Users\kovas\Downloads\AllmoxyTopEdgeCalculator\index.html`
 
 ## What Was Done
 
@@ -10,6 +10,7 @@
 - Fixed CSV parsing for unquoted inch marks in material names.
 - Restored missing materials such as Maple White rows.
 - Corrected box math so parts are summed before converting to boxes.
+- Updated height math to use whole-inch operator cut heights plus `0.2"` for any top edge.
 - Added active/removed order management with multi-select dropdowns.
 - Added drag-and-drop CSV import.
 - Added simplified report labels:
@@ -31,7 +32,7 @@
 - Added optimized sheet totals beside rips totals.
 - Simplified cut optimization rows for shop readability.
 - Added **Sync Report to Saw** button.
-- Configured saw sync endpoint: `http://server24:8787/sync-report`.
+- Configured saw sync endpoint: `http://localhost:8787/sync-report`.
 - Added saw-ready HTML report snapshot generation.
 - Added sync payload summary with orders, parts, boxes, LF, rips, and sheets.
 - Documented Task Scheduler setup for running the helper in the background.
@@ -83,7 +84,7 @@ Start in:
 ## Cut Optimization Rules
 
 - Rips run in sheet length direction.
-- Heights are packed across sheet width.
+- Cut heights round to whole inches, add `0.2"` for top edge, then pack across sheet width.
 - Trim is `0.25"` from both width sides.
 - Kerf is `0.188"`.
 - Solid is excluded.
@@ -95,4 +96,4 @@ Start in:
 - `ALLMOXY_TOP_EDGE_TEAM_PRESENTATION.md`
 - `ALLMOXY_TOP_EDGE_TEAM_PRESENTATION.html`
 - `ALLMOXY_TOP_EDGE_CHANGE_SUMMARY.md`
-- `index_backup_YYYY-MM-DD_HHMM.html`
+- Git commit history for backups/version history

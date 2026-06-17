@@ -45,6 +45,16 @@ export function parseFraction(valStr) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+export function getCutHeight(height, topEdge = '') {
+  const parsedHeight = Number(height);
+  if (!Number.isFinite(parsedHeight) || parsedHeight <= 0) {
+    return 0;
+  }
+
+  const edgeAllowance = String(topEdge || '').trim() ? 0.2 : 0;
+  return Number((Math.ceil(parsedHeight) + edgeAllowance).toFixed(2));
+}
+
 export function getMaterialCategory(material, topEdge) {
   const matLower = String(material || '').toLowerCase().trim();
   const edgeLower = String(topEdge || '').toLowerCase().trim();

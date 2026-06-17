@@ -145,6 +145,7 @@
                 <li>Maple materials are no longer skipped.</li>
                 <li>Parts are summed before converting to boxes.</li>
                 <li>Box totals no longer inflate from row-by-row rounding.</li>
+                <li>Cut heights now round to whole inches and add 0.2" for top edge.</li>
             </ul>
         </section>
 
@@ -152,7 +153,7 @@
             <h2>Cut Optimization Rules</h2>
             <ul>
                 <li>Rips run in the sheet length direction.</li>
-                <li>Rip heights are packed across sheet width.</li>
+                <li>Cut heights round to whole inches, add 0.2" for top edge, then pack across sheet width.</li>
                 <li>Trim is 0.25" on both sides of width.</li>
                 <li>Kerf is 0.188".</li>
                 <li>Solid and FAA material are excluded.</li>
@@ -204,7 +205,7 @@
         <section class="slide">
             <h2>Saw Sync</h2>
             <ul>
-                <li>The calculator sends reports to http://server24:8787/sync-report.</li>
+                <li>The calculator sends reports to http://localhost:8787/sync-report.</li>
                 <li>The helper saves reports into the shared server22 saw folder.</li>
                 <li>The saw operator opens one dashboard link from the shared folder.</li>
                 <li>This removes manual floor paperwork once the helper/dashboard are in place.</li>

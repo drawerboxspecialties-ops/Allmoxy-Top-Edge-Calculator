@@ -23,6 +23,12 @@ Cut optimization is a suggested sheet layout.
 
 It is shown for eligible non-solid/non-FAA sections only. Solid and FAA do not show sheet count or cut optimization.
 
+Cut heights are operator cut heights:
+
+- Drawer heights round up to the next whole inch.
+- Any top edge adds `0.2"` allowance.
+- Example: `4.25"` reports as `5.2"` when it has a top edge.
+
 Example:
 
 ```text

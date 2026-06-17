@@ -6,7 +6,7 @@ Static browser app for converting Allmoxy CSV data into a top-edge production re
 
 - Imports Allmoxy CSV files in the browser.
 - Parses drawer dimensions, quantities, materials, top edges, and order numbers.
-- Groups report rows by top edge, material, and height.
+- Groups report rows by top edge, material, and operator cut height.
 - Calculates boxes, parts, rounded linear feet, rounded rips, and rip size.
 - Categorizes rows into plywood, FAA, solid, and MDF/PBC/PVC/tape groups.
 - Shows cut optimization patterns for non-solid and non-FAA categories.
@@ -52,6 +52,7 @@ npm test
 
 - Box count for pre-calculated rows uses `Math.ceil(parts / 4)`.
 - Non-pre-calculated rows calculate parts as `qty * 4`.
+- Cut height rounds the imported drawer height up to the next whole inch and adds `0.2"` when a top edge is present.
 - Linear feet are rounded up with `Math.ceil`.
 - Rips are rounded up with `Math.ceil`.
 - Birch and `(60)` materials use 60 inch sheets for optimization.

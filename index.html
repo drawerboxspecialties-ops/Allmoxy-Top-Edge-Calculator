@@ -1630,6 +1630,16 @@
             return Number.isFinite(parsed) ? parsed : 0;
         }
 
+        function getCutHeight(height, topEdge = '') {
+            let parsedHeight = Number(height);
+            if (!Number.isFinite(parsedHeight) || parsedHeight <= 0) {
+                return 0;
+            }
+
+            let edgeAllowance = String(topEdge || '').trim() ? 0.2 : 0;
+            return Number((Math.ceil(parsedHeight) + edgeAllowance).toFixed(2));
+        }
+
         function handleFileImport(e) {
             let file = e.target.files[0];
             if (!file) return;
@@ -1857,9 +1867,10 @@
                 let qty = qtyIdx !== -1 && qtyIdx < cells.length ? Math.round(parseFraction(cells[qtyIdx])) : 1;
                 let width = widthIdx !== -1 && widthIdx < cells.length ? parseFraction(cells[widthIdx]) : 0;
                 let depth = depthIdx !== -1 && depthIdx < cells.length ? parseFraction(cells[depthIdx]) : 0;
-                let height = heightIdx !== -1 && heightIdx < cells.length ? Math.ceil(parseFraction(cells[heightIdx]) * 2) / 2 : 0;
                 let material = inferMaterial(cells).trim();
                 let topEdge = inferTopEdge(cells).trim();
+                let rawHeight = heightIdx !== -1 && heightIdx < cells.length ? parseFraction(cells[heightIdx]) : 0;
+                let height = getCutHeight(rawHeight, topEdge);
                 let parts = partsIdx !== -1 && partsIdx < cells.length ? Math.round(parseFraction(cells[partsIdx])) : 0;
                 let lf = lfIdx !== -1 && lfIdx < cells.length ? parseFraction(cells[lfIdx]) : 0;
                 let rips = ripsIdx !== -1 && ripsIdx < cells.length ? parseFraction(cells[ripsIdx]) : 0;

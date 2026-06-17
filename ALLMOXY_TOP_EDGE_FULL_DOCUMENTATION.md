@@ -4,7 +4,7 @@
 
 Active calculator:
 
-`C:\Users\kowsh\OneDrive\Desktop\Allmoxy Top Edge Calculator\index.html`
+`C:\Users\kovas\Downloads\AllmoxyTopEdgeCalculator\index.html`
 
 Shared saw report folder:
 
@@ -57,6 +57,7 @@ PVC, tape, and wood tape appear in the **Top Edge** column and route with the MD
 - Fixed CSV parsing for unquoted inch marks in material names.
 - Fixed missing Maple White material rows.
 - Fixed parts-to-box math by summing parts before converting to boxes.
+- Updated cut-height math to round to whole inches and add `0.2"` for top-edge allowance.
 - Added drag-and-drop CSV importing.
 - Added active/removed order controls.
 - Added print title, department labels, weekday/date/time stamp.
@@ -82,6 +83,12 @@ If browser date/file path headers appear, turn off **Headers and footers** in Ch
 ## Cut Optimization
 
 Cut optimization appears for all non-solid categories.
+
+Cut-height rule:
+
+- Imported drawer height is rounded up to the next whole inch.
+- Rows with a top edge get an additional `0.2"` allowance.
+- Example: `4.25"` with a top edge becomes `5.2"`.
 
 Rules:
 
@@ -142,7 +149,7 @@ The dashboard should show synced reports by date/time and let the operator open 
 
 Validated against:
 
-`C:\Users\kowsh\Downloads\thursday all-Top Edge Report.csv`
+`C:\Users\kovas\Downloads\thursday all-Top Edge Report.csv`
 
 Results:
 
