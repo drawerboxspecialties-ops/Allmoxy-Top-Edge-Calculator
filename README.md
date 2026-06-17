@@ -52,12 +52,13 @@ npm test
 
 - Box count for pre-calculated rows uses `Math.ceil(parts / 4)`.
 - Non-pre-calculated rows calculate parts as `qty * 4`.
-- Cut height rounds the imported drawer height up to the next whole inch and adds `0.2"` when a top edge is present.
+- Cut height rounds imported drawer height up to the next whole inch. It adds `0.2"` only for machined Bullnose/Flat/Foil top edges on Solid, Ply, or FAA materials; PVC/tape/banding edges, including `Flat PVC` and `PVC Flat Flush`, do not get the allowance.
 - Linear feet are rounded up with `Math.ceil`.
 - Rips are rounded up with `Math.ceil`.
 - Birch and `(60)` materials use 60 inch sheets for optimization.
 - Other non-solid materials use 48 inch sheets.
 - Solid and FAA sides do not generate cut optimization groups.
+- MDF/PBC/melamine materials do not offer Bullnose/Flat/Foil top edges; those combinations are flagged in the report for review. MDF/PBC with `Flat PVC` or `PVC Flat Flush` is allowed.
 - PVC/tape/wood tape top edges route to the MDF/PBC/PVC/tape category even when the material contains plywood.
 
 ## Deployment

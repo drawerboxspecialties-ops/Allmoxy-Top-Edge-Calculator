@@ -270,6 +270,40 @@
             margin-bottom: 0.45rem;
         }
 
+        .cut-optimization-group {
+            background: #ffffff;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            margin-top: 0.55rem;
+            overflow: hidden;
+        }
+
+        .cut-optimization-group-header {
+            align-items: center;
+            background: #eff6ff;
+            border-bottom: 1px solid #dbeafe;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem 0.75rem;
+            justify-content: space-between;
+            padding: 0.55rem 0.65rem;
+        }
+
+        .cut-optimization-group-title {
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        .cut-optimization-group-spec {
+            color: #475569;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .cut-optimization-group-body {
+            padding: 0.25rem 0.65rem 0.65rem;
+        }
+
         .cut-pattern-list {
             display: grid;
             gap: 0.35rem;
@@ -631,6 +665,18 @@
             color: #6b21a8;
         }
 
+        .validation-warning {
+            background: #fef2f2;
+            border: 1px solid #dc2626;
+            border-radius: 6px;
+            color: #991b1b;
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 800;
+            margin-top: 0.25rem;
+            padding: 0.12rem 0.35rem;
+        }
+
         .input-inline {
             background: transparent;
             border: 1px solid transparent;
@@ -868,6 +914,34 @@
                 color: #000000 !important;
                 font-size: 9.5px !important;
                 margin-bottom: 2px !important;
+            }
+
+            .cut-optimization-group {
+                border: 1px solid #000000 !important;
+                border-radius: 4px !important;
+                margin-top: 4px !important;
+                overflow: hidden !important;
+                break-inside: avoid !important;
+            }
+
+            .cut-optimization-group-header {
+                background: #f1f5f9 !important;
+                border-bottom: 1px solid #000000 !important;
+                display: flex !important;
+                gap: 5px !important;
+                justify-content: space-between !important;
+                padding: 3px 4px !important;
+            }
+
+            .cut-optimization-group-title,
+            .cut-optimization-group-spec {
+                color: #000000 !important;
+                font-size: 9.5px !important;
+                font-weight: 700 !important;
+            }
+
+            .cut-optimization-group-body {
+                padding: 2px 4px 4px !important;
             }
 
             .cut-pattern-list {
@@ -1449,16 +1523,22 @@
                 }
             });
 
-            return Object.values(grouped).map(group => {
-                let sheets = packRipHeights(group.heights, group.usableWidth, kerf);
-                return {
-                    ...group,
-                    kerf,
-                    trimPerSide,
-                    sheets,
-                    patterns: summarizeSheetPatterns(sheets, group.usableWidth)
-                };
-            });
+            return Object.values(grouped)
+                .sort((a, b) =>
+                    String(a.material).localeCompare(String(b.material), undefined, { sensitivity: 'base' }) ||
+                    String(a.topEdge).localeCompare(String(b.topEdge), undefined, { sensitivity: 'base' }) ||
+                    a.sheetWidth - b.sheetWidth
+                )
+                .map(group => {
+                    let sheets = packRipHeights(group.heights, group.usableWidth, kerf);
+                    return {
+                        ...group,
+                        kerf,
+                        trimPerSide,
+                        sheets,
+                        patterns: summarizeSheetPatterns(sheets, group.usableWidth)
+                    };
+                });
         }
 
         function packRipHeights(heights, usableWidth, kerf) {
@@ -1523,14 +1603,19 @@
             let html = '<div class="cut-optimization"><div class="cut-optimization-title">Cut Optimization</div>';
             groups.forEach(group => {
                 html += `
-                    <div class="cut-optimization-meta">
-                        <b>${escapeHTML(group.material)}</b> / ${escapeHTML(group.topEdge)}
-                        - ${group.sheets.length} sheet${group.sheets.length === 1 ? '' : 's'}
-                        (${group.sheetWidth}" sheet, usable ${formatInches(group.usableWidth)}", kerf ${group.kerf}")
-                    </div>
+                    <div class="cut-optimization-group">
+                        <div class="cut-optimization-group-header">
+                            <div class="cut-optimization-group-title">
+                                ${escapeHTML(group.material)}
+                            </div>
+                            <div class="cut-optimization-group-spec">
+                                Top Edge: ${escapeHTML(group.topEdge)} • ${group.sheets.length} sheet${group.sheets.length === 1 ? '' : 's'} • ${group.sheetWidth}" sheet • usable ${formatInches(group.usableWidth)}" • kerf ${group.kerf}"
+                            </div>
+                        </div>
+                        <div class="cut-optimization-group-body">
+                            <div class="cut-pattern-list">
                 `;
 
-                html += '<div class="cut-pattern-list">';
                 group.patterns.forEach(pattern => {
                     let ripHtml = pattern.ripCounts.map(rip => `
                         <span class="cut-rip-chip">${escapeHTML(rip.height)}&quot; - ${rip.count} rip${rip.count === 1 ? '' : 's'}</span>
@@ -1544,7 +1629,12 @@
                         </div>
                     `;
                 });
-                html += '</div>';
+
+                html += `
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
             html += '</div>';
             return html;
@@ -1630,14 +1720,52 @@
             return Number.isFinite(parsed) ? parsed : 0;
         }
 
-        function getCutHeight(height, topEdge = '') {
+        function materialGetsTopEdgeAllowance(material = '') {
+            let matLower = String(material || '').toLowerCase().trim();
+            return (
+                matLower.startsWith('faa') ||
+                matLower.includes('faa:') ||
+                matLower.includes('ply') ||
+                matLower.includes('birch') ||
+                matLower.includes('solid') ||
+                matLower.includes('alder') ||
+                matLower.includes('mahogany') ||
+                matLower.includes('cedar') ||
+                matLower.includes('beech') ||
+                matLower.includes('maple') ||
+                matLower.includes('oak') ||
+                matLower.includes('cherry') ||
+                matLower.includes('walnut') ||
+                matLower.includes('fir')
+            );
+        }
+
+        function isMdfPbcMaterial(material = '') {
+            let matLower = String(material || '').toLowerCase().trim();
+            return matLower.startsWith('mdf') || matLower.startsWith('pbc') || matLower.includes('melamine') || matLower.includes('particle');
+        }
+
+        function topEdgeGetsAllowance(topEdge = '') {
+            let edgeLower = String(topEdge || '').toLowerCase().trim();
+            if (!edgeLower) return false;
+            if (edgeLower.includes('pvc') || edgeLower.includes('tape') || edgeLower.includes('band')) {
+                return false;
+            }
+            return edgeLower.includes('bullnose') || edgeLower.includes('flat') || edgeLower.includes('foil');
+        }
+
+        function getCutHeight(height, topEdge = '', material = '') {
             let parsedHeight = Number(height);
             if (!Number.isFinite(parsedHeight) || parsedHeight <= 0) {
                 return 0;
             }
 
-            let edgeAllowance = String(topEdge || '').trim() ? 0.2 : 0;
+            let edgeAllowance = materialGetsTopEdgeAllowance(material) && topEdgeGetsAllowance(topEdge) ? 0.2 : 0;
             return Number((Math.ceil(parsedHeight) + edgeAllowance).toFixed(2));
+        }
+
+        function isUnsupportedMdfPbcTopEdge(material = '', topEdge = '') {
+            return isMdfPbcMaterial(material) && topEdgeGetsAllowance(topEdge);
         }
 
         function handleFileImport(e) {
@@ -1870,7 +1998,7 @@
                 let material = inferMaterial(cells).trim();
                 let topEdge = inferTopEdge(cells).trim();
                 let rawHeight = heightIdx !== -1 && heightIdx < cells.length ? parseFraction(cells[heightIdx]) : 0;
-                let height = getCutHeight(rawHeight, topEdge);
+                let height = getCutHeight(rawHeight, topEdge, material);
                 let parts = partsIdx !== -1 && partsIdx < cells.length ? Math.round(parseFraction(cells[partsIdx])) : 0;
                 let lf = lfIdx !== -1 && lfIdx < cells.length ? parseFraction(cells[lfIdx]) : 0;
                 let rips = ripsIdx !== -1 && ripsIdx < cells.length ? parseFraction(cells[ripsIdx]) : 0;
@@ -2030,6 +2158,7 @@
                     topEdge: g.topEdge,
                     material: g.material,
                     height: g.height,
+                    unsupportedTopEdge: isUnsupportedMdfPbcTopEdge(g.material, g.topEdge),
                     boxes: boxes,
                     parts: parts,
                     lf: lfRound,
@@ -2163,10 +2292,13 @@
                     let isHighlighted = g.height >= 13;
                     let rowClass = isHighlighted ? ' class="highlight-row"' : '';
                     let displayHeight = isHighlighted ? `⚠️ ${g.height}"` : `${g.height}"`;
+                    let topEdgeWarning = g.unsupportedTopEdge
+                        ? '<br><span class="validation-warning">Unsupported for MDF/PBC</span>'
+                        : '';
 
                     html += `
                         <tr${rowClass}>
-                            <td><b>${escapeHTML(g.topEdge)}</b></td>
+                            <td><b>${escapeHTML(g.topEdge)}</b>${topEdgeWarning}</td>
                             <td><span class="badge ${badgeClass}">${escapeHTML(g.material)}</span></td>
                             <td style="text-align: center;">${g.boxes}</td>
                             <td style="text-align: center;">${g.parts}</td>
@@ -2365,6 +2497,33 @@
         .cut-optimization-title {
             font-weight: 700;
             margin-bottom: 4px;
+        }
+        .cut-optimization-group {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .cut-optimization-group-header {
+            background: #f1f5f9;
+            border-bottom: 1px solid #cbd5e1;
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            padding: 6px 8px;
+        }
+        .cut-optimization-group-title {
+            font-weight: 700;
+        }
+        .cut-optimization-group-spec {
+            color: #475569;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: right;
+        }
+        .cut-optimization-group-body {
+            padding: 3px 8px 8px;
         }
         .cut-pattern {
             display: grid;

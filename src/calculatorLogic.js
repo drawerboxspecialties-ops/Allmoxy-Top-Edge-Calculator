@@ -45,14 +45,52 @@ export function parseFraction(valStr) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-export function getCutHeight(height, topEdge = '') {
+export function materialGetsTopEdgeAllowance(material = '') {
+  const matLower = String(material || '').toLowerCase().trim();
+  return (
+    matLower.startsWith('faa') ||
+    matLower.includes('faa:') ||
+    matLower.includes('ply') ||
+    matLower.includes('birch') ||
+    matLower.includes('solid') ||
+    matLower.includes('alder') ||
+    matLower.includes('mahogany') ||
+    matLower.includes('cedar') ||
+    matLower.includes('beech') ||
+    matLower.includes('maple') ||
+    matLower.includes('oak') ||
+    matLower.includes('cherry') ||
+    matLower.includes('walnut') ||
+    matLower.includes('fir')
+  );
+}
+
+export function isMdfPbcMaterial(material = '') {
+  const matLower = String(material || '').toLowerCase().trim();
+  return matLower.startsWith('mdf') || matLower.startsWith('pbc') || matLower.includes('melamine') || matLower.includes('particle');
+}
+
+export function topEdgeGetsAllowance(topEdge = '') {
+  const edgeLower = String(topEdge || '').toLowerCase().trim();
+  if (!edgeLower) return false;
+  if (edgeLower.includes('pvc') || edgeLower.includes('tape') || edgeLower.includes('band')) {
+    return false;
+  }
+  return edgeLower.includes('bullnose') || edgeLower.includes('flat') || edgeLower.includes('foil');
+}
+
+export function getCutHeight(height, topEdge = '', material = '') {
   const parsedHeight = Number(height);
   if (!Number.isFinite(parsedHeight) || parsedHeight <= 0) {
     return 0;
   }
 
-  const edgeAllowance = String(topEdge || '').trim() ? 0.2 : 0;
+  const edgeAllowance = materialGetsTopEdgeAllowance(material) && topEdgeGetsAllowance(topEdge) ? 0.2 : 0;
   return Number((Math.ceil(parsedHeight) + edgeAllowance).toFixed(2));
+}
+
+export function isUnsupportedMdfPbcTopEdge(material = '', topEdge = '') {
+  return isMdfPbcMaterial(material) && topEdgeGetsAllowance(topEdge);
 }
 
 export function getMaterialCategory(material, topEdge) {
@@ -175,16 +213,22 @@ export function getCutOptimizationGroups(list, catName) {
     }
   });
 
-  return Object.values(grouped).map(group => {
-    const sheets = packRipHeights(group.heights, group.usableWidth, kerf);
-    return {
-      ...group,
-      kerf,
-      trimPerSide,
-      sheets,
-      patterns: summarizeSheetPatterns(sheets, group.usableWidth)
-    };
-  });
+  return Object.values(grouped)
+    .sort((a, b) =>
+      String(a.material).localeCompare(String(b.material), undefined, { sensitivity: 'base' }) ||
+      String(a.topEdge).localeCompare(String(b.topEdge), undefined, { sensitivity: 'base' }) ||
+      a.sheetWidth - b.sheetWidth
+    )
+    .map(group => {
+      const sheets = packRipHeights(group.heights, group.usableWidth, kerf);
+      return {
+        ...group,
+        kerf,
+        trimPerSide,
+        sheets,
+        patterns: summarizeSheetPatterns(sheets, group.usableWidth)
+      };
+    });
 }
 
 export function getOptimizedSheetTotal(list, catName) {

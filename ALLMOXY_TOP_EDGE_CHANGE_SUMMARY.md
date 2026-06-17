@@ -10,7 +10,7 @@
 - Fixed CSV parsing for unquoted inch marks in material names.
 - Restored missing materials such as Maple White rows.
 - Corrected box math so parts are summed before converting to boxes.
-- Updated height math to use whole-inch operator cut heights plus `0.2"` for any top edge.
+- Updated height math to use whole-inch operator cut heights plus `0.2"` only for qualifying Bullnose/Flat/Foil top edges.
 - Added active/removed order management with multi-select dropdowns.
 - Added drag-and-drop CSV import.
 - Added simplified report labels:
@@ -84,7 +84,7 @@ Start in:
 ## Cut Optimization Rules
 
 - Rips run in sheet length direction.
-- Cut heights round to whole inches, add `0.2"` for top edge, then pack across sheet width.
+- Cut heights round to whole inches, add `0.2"` only for qualifying machined top edges, then pack across sheet width.
 - Trim is `0.25"` from both width sides.
 - Kerf is `0.188"`.
 - Solid is excluded.

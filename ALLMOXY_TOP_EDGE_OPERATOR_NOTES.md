@@ -26,8 +26,12 @@ It is shown for eligible non-solid/non-FAA sections only. Solid and FAA do not s
 Cut heights are operator cut heights:
 
 - Drawer heights round up to the next whole inch.
-- Any top edge adds `0.2"` allowance.
-- Example: `4.25"` reports as `5.2"` when it has a top edge.
+- Bullnose, Flat, and Foil top edges add `0.2"` allowance on Solid, Ply, and FAA material.
+- PVC, tape, wood tape, edgeband, and banding top edges do not add `0.2"`. This includes `Flat PVC` and `PVC Flat Flush`.
+- MDF/PBC/melamine materials should not have Bullnose, Flat, or Foil top edges. If they appear, the report flags them as unsupported for review.
+- Example: `4.25"` Baltic Birch with Clear Foil Bullnose reports as `5.2"`.
+- Example: `5"` Baltic Birch with PVC Tape reports as `5"`.
+- Example: `5"` PBC with PVC Flat Flush reports as `5"` and is allowed.
 
 Example:
 

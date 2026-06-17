@@ -90,13 +90,13 @@ Without this, rows after that field can become misaligned and skipped.
 
 ## Cut Height Rounding
 
-Before grouping, drawer heights are rounded up to the next whole inch. If the row has a top edge, the calculator adds `0.2"` for the operator's top-edge allowance:
+Before grouping, drawer heights are rounded up to the next whole inch. The calculator adds `0.2"` only for machined Bullnose/Flat/Foil top edges on Solid, Ply, or FAA materials. PVC, tape, wood tape, edgeband, and banding top edges do not receive the allowance:
 
 ```js
-height = Math.ceil(parseFraction(heightValue)) + (topEdge ? 0.2 : 0);
+height = Math.ceil(parseFraction(heightValue)) + (materialQualifies && topEdgeQualifies ? 0.2 : 0);
 ```
 
-If the row has no top edge value, the `0.2"` allowance is not added.
+If the row has no qualifying material/top-edge combination, the `0.2"` allowance is not added.
 
 ## Department Routing
 

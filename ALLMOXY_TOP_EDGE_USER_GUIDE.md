@@ -39,8 +39,11 @@ For every non-solid and non-FAA report section, the tool shows a compact **Cut O
 Cut heights shown in the report follow the saw operator rule:
 
 - Round drawer height up to the next whole inch.
-- Add `0.2"` when a top edge is present.
-- Example: `4.25"` with a top edge reports as `5.2"`.
+- Add `0.2"` only for Bullnose, Flat, or Foil top edges on Solid, Ply, or FAA material.
+- Do not add the `0.2"` allowance for PVC, tape, wood tape, edgeband, or banding top edges, including `Flat PVC` and `PVC Flat Flush`.
+- Example: `4.25"` Baltic Birch with Clear Foil Bullnose reports as `5.2"`.
+- Example: `5"` Baltic Birch with PVC Tape reports as `5"`.
+- Example: `5"` PBC with PVC Flat Flush reports as `5"` and is allowed.
 
 Rules used:
 

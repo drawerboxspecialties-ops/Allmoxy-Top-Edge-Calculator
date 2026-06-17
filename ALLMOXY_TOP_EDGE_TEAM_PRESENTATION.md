@@ -88,7 +88,7 @@ The tool now shows cut guidance for non-solid materials.
 Rules:
 
 - Rips run lengthwise.
-- Cut heights round to whole inches, add `0.2"` for top edge, then pack across sheet width.
+- Cut heights round to whole inches, add `0.2"` only for qualifying machined top edges, then pack across sheet width.
 - Trim is `0.25"` on both sheet-width sides.
 - Kerf is `0.188"`.
 - Solid and FAA materials are skipped.

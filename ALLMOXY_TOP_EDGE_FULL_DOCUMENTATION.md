@@ -57,7 +57,7 @@ PVC, tape, and wood tape appear in the **Top Edge** column and route with the MD
 - Fixed CSV parsing for unquoted inch marks in material names.
 - Fixed missing Maple White material rows.
 - Fixed parts-to-box math by summing parts before converting to boxes.
-- Updated cut-height math to round to whole inches and add `0.2"` for top-edge allowance.
+- Updated cut-height math to round to whole inches and add `0.2"` only for qualifying machined Bullnose/Flat/Foil top edges.
 - Added drag-and-drop CSV importing.
 - Added active/removed order controls.
 - Added print title, department labels, weekday/date/time stamp.
@@ -87,8 +87,12 @@ Cut optimization appears for all non-solid categories.
 Cut-height rule:
 
 - Imported drawer height is rounded up to the next whole inch.
-- Rows with a top edge get an additional `0.2"` allowance.
-- Example: `4.25"` with a top edge becomes `5.2"`.
+- Solid, Ply, and FAA rows with Bullnose, Flat, or Foil top edges get an additional `0.2"` allowance.
+- PVC, tape, wood tape, edgeband, and banding top edges do not get the `0.2"` allowance. This includes `Flat PVC` and `PVC Flat Flush`.
+- MDF/PBC/melamine materials do not offer Bullnose, Flat, or Foil top edges. If a CSV contains that combination, the report flags it as unsupported for review. MDF/PBC with `Flat PVC` or `PVC Flat Flush` is allowed.
+- Example: `4.25"` Baltic Birch with Clear Foil Bullnose becomes `5.2"`.
+- Example: `5"` Baltic Birch with PVC Tape remains `5"`.
+- Example: `5"` PBC with PVC Flat Flush remains `5"`.
 
 Rules:
 

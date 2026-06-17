@@ -6,8 +6,12 @@ import {
   getMaterialCategory,
   getOptimizedSheetTotal,
   getSheetWidth,
+  isMdfPbcMaterial,
+  isUnsupportedMdfPbcTopEdge,
+  materialGetsTopEdgeAllowance,
   packRipHeights,
-  parseFraction
+  parseFraction,
+  topEdgeGetsAllowance
 } from '../src/calculatorLogic.js';
 
 describe('dimension parsing and formatting', () => {
@@ -31,11 +35,39 @@ describe('dimension parsing and formatting', () => {
     expect(formatInches(5.125)).toBe('5.13');
   });
 
-  it('rounds cut heights to whole inches and adds top edge allowance', () => {
-    expect(getCutHeight(4.25, 'Clear Foil Bullnose')).toBe(5.2);
-    expect(getCutHeight(5, 'PVC Tape')).toBe(5.2);
-    expect(getCutHeight(5.01, 'Wood Tape')).toBe(6.2);
-    expect(getCutHeight(5.01, '')).toBe(6);
+  it('adds top edge allowance only for machined solid, plywood, and FAA edges', () => {
+    expect(materialGetsTopEdgeAllowance('PF: 12MM Baltic Birch Ply')).toBe(true);
+    expect(materialGetsTopEdgeAllowance('Maple Solid')).toBe(true);
+    expect(materialGetsTopEdgeAllowance('FAA: Birch')).toBe(true);
+    expect(materialGetsTopEdgeAllowance('White Melamine')).toBe(false);
+
+    expect(topEdgeGetsAllowance('Clear Foil Bullnose')).toBe(true);
+    expect(topEdgeGetsAllowance('Flat Foil')).toBe(true);
+    expect(topEdgeGetsAllowance('PVC Tape')).toBe(false);
+    expect(topEdgeGetsAllowance('PF Wood Tape')).toBe(false);
+    expect(topEdgeGetsAllowance('Flat PVC')).toBe(false);
+    expect(topEdgeGetsAllowance('PVC Flat Flush')).toBe(false);
+
+    expect(getCutHeight(4.25, 'Clear Foil Bullnose', 'PF: 12MM Baltic Birch Ply')).toBe(5.2);
+    expect(getCutHeight(5, 'Flat Foil', 'Maple Solid')).toBe(5.2);
+    expect(getCutHeight(5.01, 'Clear Foil Bullnose', 'FAA: Birch')).toBe(6.2);
+    expect(getCutHeight(5, 'PVC Tape', 'PF: 12MM Baltic Birch Ply')).toBe(5);
+    expect(getCutHeight(5, 'Flat PVC', 'PBC White')).toBe(5);
+    expect(getCutHeight(5, 'PVC Flat Flush', 'MDF Black')).toBe(5);
+    expect(getCutHeight(5.01, 'PF Wood Tape', 'PF: 12MM Baltic Birch Ply')).toBe(6);
+    expect(getCutHeight(5.01, 'Clear Foil Bullnose', 'White Melamine')).toBe(6);
+  });
+
+  it('flags bullnose flat and foil top edges as unsupported for MDF PBC materials', () => {
+    expect(isMdfPbcMaterial('White Melamine')).toBe(true);
+    expect(isMdfPbcMaterial('PBC White')).toBe(true);
+    expect(isMdfPbcMaterial('MDF Black')).toBe(true);
+    expect(isUnsupportedMdfPbcTopEdge('White Melamine', 'Clear Foil Bullnose')).toBe(true);
+    expect(isUnsupportedMdfPbcTopEdge('PBC White', 'Flat Foil')).toBe(true);
+    expect(isUnsupportedMdfPbcTopEdge('MDF Black', 'PVC Tape')).toBe(false);
+    expect(isUnsupportedMdfPbcTopEdge('PBC White', 'Flat PVC')).toBe(false);
+    expect(isUnsupportedMdfPbcTopEdge('MDF Black', 'PVC Flat Flush')).toBe(false);
+    expect(isUnsupportedMdfPbcTopEdge('PBC White', 'Edgeband')).toBe(false);
   });
 });
 
@@ -82,5 +114,20 @@ describe('cut optimization rules', () => {
     expect(groups[0].sheetWidth).toBe(60);
     expect(groups[0].usableWidth).toBe(59.5);
     expect(getOptimizedSheetTotal(rows, 'PLYWOOD SIDES')).toBe(groups[0].sheets.length);
+  });
+
+  it('keeps optimization groups for the same material together by top edge', () => {
+    const rows = [
+      { height: 8, rips: 1, material: 'Maple Ply', topEdge: 'PVC Tape' },
+      { height: 8, rips: 1, material: 'Baltic Birch Ply', topEdge: 'PF Wood Tape' },
+      { height: 6, rips: 1, material: 'Baltic Birch Ply', topEdge: 'PVC Tape' }
+    ];
+    const groups = getCutOptimizationGroups(rows, 'PLYWOOD SIDES');
+
+    expect(groups.map(group => `${group.material} / ${group.topEdge}`)).toEqual([
+      'Baltic Birch Ply / PF Wood Tape',
+      'Baltic Birch Ply / PVC Tape',
+      'Maple Ply / PVC Tape'
+    ]);
   });
 });
