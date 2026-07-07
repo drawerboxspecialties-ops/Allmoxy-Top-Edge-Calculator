@@ -1,14 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
+  combineSideItems,
   formatInches,
   getCutHeight,
   getCutOptimizationGroups,
+  getEdgeInchesFromSides,
   getMaterialCategory,
   getOptimizedSheetTotal,
   getSheetWidth,
   isMdfPbcMaterial,
   isUnsupportedMdfPbcTopEdge,
   materialGetsTopEdgeAllowance,
+  normalizeSide,
   packRipHeights,
   parseFraction,
   topEdgeGetsAllowance
@@ -87,6 +90,53 @@ describe('material rules', () => {
     expect(getMaterialCategory('Maple Solid', 'Clear Foil Bullnose')).toBe('SOLID SIDES');
     expect(getMaterialCategory('Baltic Birch Ply', 'PVC White Tape')).toBe('MDF / PBC / PVC & TAPE SIDES');
     expect(getMaterialCategory('White Melamine', 'Clear Foil Bullnose')).toBe('MDF / PBC / PVC & TAPE SIDES');
+  });
+});
+
+describe('side combining', () => {
+  it('normalizes side labels from common CSV values', () => {
+    expect(normalizeSide('f')).toBe('F');
+    expect(normalizeSide('Front')).toBe('F');
+    expect(normalizeSide('BACK')).toBe('B');
+    expect(normalizeSide('Left')).toBe('L');
+    expect(normalizeSide('RIGHT')).toBe('R');
+    expect(normalizeSide('')).toBe('');
+  });
+
+  it('counts paired F/B and L/R edges once per matching dimension set', () => {
+    expect(getEdgeInchesFromSides(['F', 'B'], 20, 15)).toBe(40);
+    expect(getEdgeInchesFromSides(['L', 'R'], 20, 15)).toBe(30);
+    expect(getEdgeInchesFromSides(['F', 'B', 'L', 'R'], 20, 15)).toBe(70);
+    expect(getEdgeInchesFromSides(['F'], 20, 15)).toBe(20);
+    expect(getEdgeInchesFromSides(['L'], 20, 15)).toBe(15);
+  });
+
+  it('combines matching F/B and L/R rows into one drawer item', () => {
+    const base = {
+      topEdge: 'Clear Foil Bullnose',
+      material: 'PF: 12MM Baltic Birch Ply',
+      height: 5,
+      width: 20,
+      depth: 15,
+      orderId: '602501'
+    };
+
+    const combined = combineSideItems([
+      { ...base, side: 'F', qty: 1 },
+      { ...base, side: 'B', qty: 1 },
+      { ...base, side: 'L', qty: 1 },
+      { ...base, side: 'R', qty: 1 }
+    ]);
+
+    expect(combined).toHaveLength(1);
+    expect(combined[0].edgeInchesPerUnit).toBe(70);
+    expect(combined[0].sideCount).toBe(4);
+    expect(combined[0].qty).toBe(1);
+  });
+
+  it('keeps non-side rows unchanged', () => {
+    const rows = [{ qty: 1, width: 10, depth: 10, height: 5, topEdge: 'PVC', material: 'Melamine' }];
+    expect(combineSideItems(rows)).toEqual(rows);
   });
 });
 
