@@ -1902,7 +1902,6 @@
             let heightIdx = headers.findIndex(h => h === 'h' || h === 'height' || h.includes('height'));
             let matIdx = headers.findIndex(h => h.includes('material') || h.includes('species') || h.includes('wood') || h === 'mat');
             let edgeIdx = headers.findIndex(h => h.includes('edge') || h.includes('banding') || h.includes('foil') || h.includes('tape'));
-            let sideIdx = headers.findIndex(h => h === 'side' || h.includes('sidedes') || h.includes('drawerside'));
             let orderIdx = headers.findIndex(h => h.includes('order') || h.includes('invoice') || h.includes('quote'));
 
             // Find pre-calculated columns
@@ -1984,90 +1983,6 @@
             if (depthIdx === -1) depthIdx = 3;
             if (heightIdx === -1) heightIdx = 4;
 
-            function normalizeSide(value) {
-                let side = String(value || '').trim().toUpperCase();
-                if (!side) return '';
-                if (side === 'F' || side.startsWith('FRONT')) return 'F';
-                if (side === 'B' || side.startsWith('BACK')) return 'B';
-                if (side === 'L' || side.startsWith('LEFT')) return 'L';
-                if (side === 'R' || side.startsWith('RIGHT')) return 'R';
-                return '';
-            }
-
-            function getEdgeInchesFromSides(sides, width, depth) {
-                let hasF = sides.includes('F');
-                let hasB = sides.includes('B');
-                let hasL = sides.includes('L');
-                let hasR = sides.includes('R');
-                let widthInches = 0;
-                let depthInches = 0;
-
-                if (hasF && hasB) {
-                    widthInches = 2 * width;
-                } else if (hasF || hasB) {
-                    widthInches = width;
-                }
-
-                if (hasL && hasR) {
-                    depthInches = 2 * depth;
-                } else if (hasL || hasR) {
-                    depthInches = depth;
-                }
-
-                return widthInches + depthInches;
-            }
-
-            function combineSideItems(parsedItems) {
-                let withoutSides = [];
-                let groups = {};
-
-                parsedItems.forEach(item => {
-                    let side = normalizeSide(item.side);
-                    if (!side) {
-                        withoutSides.push(item);
-                        return;
-                    }
-
-                    let boxKey = [
-                        item.orderId || '',
-                        item.topEdge || '',
-                        item.material || '',
-                        item.height,
-                        item.width,
-                        item.depth
-                    ].join('|');
-
-                    if (!groups[boxKey]) {
-                        groups[boxKey] = {
-                            qty: 0,
-                            sides: [],
-                            template: { ...item }
-                        };
-                    }
-
-                    let group = groups[boxKey];
-                    group.qty = Math.max(group.qty, item.qty || 1);
-                    if (!group.sides.includes(side)) {
-                        group.sides.push(side);
-                    }
-                });
-
-                let combined = Object.values(groups).map(group => {
-                    let template = group.template;
-                    let edgeInchesPerUnit = getEdgeInchesFromSides(group.sides, template.width, template.depth);
-                    let { side, ...rest } = template;
-
-                    return {
-                        ...rest,
-                        qty: group.qty,
-                        edgeInchesPerUnit,
-                        sideCount: group.sides.length
-                    };
-                });
-
-                return withoutSides.concat(combined);
-            }
-
             let parsedItems = [];
             let orderIds = [];
             let materials = [];
@@ -2082,7 +1997,6 @@
                 let depth = depthIdx !== -1 && depthIdx < cells.length ? parseFraction(cells[depthIdx]) : 0;
                 let material = inferMaterial(cells).trim();
                 let topEdge = inferTopEdge(cells).trim();
-                let side = normalizeSide(getCell(cells, sideIdx).trim());
                 let rawHeight = heightIdx !== -1 && heightIdx < cells.length ? parseFraction(cells[heightIdx]) : 0;
                 let height = getCutHeight(rawHeight, topEdge, material);
                 let parts = partsIdx !== -1 && partsIdx < cells.length ? Math.round(parseFraction(cells[partsIdx])) : 0;
@@ -2115,18 +2029,6 @@
                         orderId: oId
                     });
                     itemAdded = true;
-                } else if (side && qty > 0 && width > 0 && height > 0) {
-                    parsedItems.push({
-                        qty,
-                        width,
-                        depth,
-                        height,
-                        side,
-                        topEdge: topEdge || "Clear Foil Bullnose",
-                        material: material || "PF: 12MM Baltic Birch Ply",
-                        orderId: oId
-                    });
-                    itemAdded = true;
                 } else if (qty > 0 && width > 0 && depth > 0 && height > 0) {
                     parsedItems.push({
                         qty,
@@ -2150,7 +2052,7 @@
                 }
             }
             
-            return { items: combineSideItems(parsedItems), orderIds: orderIds, materials: materials, skippedRows: skippedRows };
+            return { items: parsedItems, orderIds: orderIds, materials: materials, skippedRows: skippedRows };
         }
 
 
@@ -2225,10 +2127,6 @@
                     rawGroups[key].preCalculatedLF += item.lf;
                     rawGroups[key].preCalculatedRips += item.rips;
                     rawGroups[key].hasPreCalculated = true;
-                } else if (item.edgeInchesPerUnit != null) {
-                    rawGroups[key].boxes += item.qty;
-                    rawGroups[key].parts += (item.sideCount || 4) * item.qty;
-                    rawGroups[key].totalInches += item.edgeInchesPerUnit * item.qty;
                 } else {
                     let perimeter = (2 * item.depth) + (2 * item.width);
                     rawGroups[key].boxes += item.qty;
