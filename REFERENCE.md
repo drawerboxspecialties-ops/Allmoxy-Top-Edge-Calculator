@@ -7,7 +7,7 @@ The browser app is `index.html`. `src/calculatorLogic.js` mirrors the pure rules
 1. Upload or drop an Allmoxy CSV.
 2. Remove or restore orders from the order lists if needed.
 3. Use **Filter Out Rows** to drop an order, material, or top edge from this session. Check **Add removed rows back to CSV export** only when the export should include them again.
-4. Print, export CSV, or click **Sync Report to Saw**.
+4. Print or export CSV.
 
 Printed department names are Plywood, Solid, FAA, and MDF / PBC. Each department starts on its own page. Rows at `13"` or taller are highlighted.
 
@@ -97,23 +97,12 @@ Cut optimization:
 - A long group may continue on the next page.
 - Patterns print in two columns: sheet count, rip chips, waste.
 
-## Saw sync
-
-**Sync Report to Saw** posts to `http://localhost:8787/sync-report` on `server24`.
-
-The helper writes HTML into:
-
-`\\server22\SHARE\Data\Cabinet Vision\Biesse Selco\Allmoxy Top Edge Reports`
-
-Task Scheduler setup for that helper is in `ALLMOXY_SAW_SYNC_TASK_SCHEDULER_SETUP.md`.
-
 ## Where to edit
 
 | Change | Where |
 | --- | --- |
 | Cut height, departments, sheet width, rip length, packing | The matching functions in `index.html` and `src/calculatorLogic.js` |
 | Print columns, wrapping, page margins | `@media print` in `index.html` |
-| Saw dashboard snapshot styling | `buildSawReportHtml()` in `index.html` |
 | Tests | `tests/calculatorLogic.test.js` |
 
 After a rule change, run `npm test`, import a current CSV, and print one department.

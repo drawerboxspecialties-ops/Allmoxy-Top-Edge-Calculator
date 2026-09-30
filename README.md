@@ -12,7 +12,6 @@ Live site: https://drawerboxspecialties-ops.github.io/Allmoxy-Top-Edge-Calculato
 | `src/calculatorLogic.js` | The same pure rules, extracted so they can be tested. Keep this in step with `index.html` when a rule changes. |
 | `tests/calculatorLogic.test.js` | Tests for those rules. |
 | `REFERENCE.md` | How the report is calculated, printed, and fixed. |
-| `ALLMOXY_SAW_SYNC_TASK_SCHEDULER_SETUP.md` | How the saw helper is kept running on `server24`. |
 
 ## Run
 
