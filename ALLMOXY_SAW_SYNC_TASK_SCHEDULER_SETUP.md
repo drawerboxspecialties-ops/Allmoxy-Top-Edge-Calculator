@@ -1,5 +1,7 @@
 # Allmoxy Saw Sync - Task Scheduler Setup
 
+Calculator rules and print layout are in `REFERENCE.md`. This file is only the helper that must stay running.
+
 ## Purpose
 
 The saw sync helper must keep running so the calculator can post reports to:
